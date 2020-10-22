@@ -31,70 +31,72 @@ import io.actor4j.core.exceptions.ActorInitializationException;
 import io.actor4j.core.messages.ActorMessage;
 
 public class RestartProtocol {
-	protected final ActorCell cell;
 
-	public RestartProtocol(ActorCell cell) {
-		this.cell = cell;
-	}
-	
-	protected void postStop() {
-		cell.postStop();
-		cell.internal_stop();
-		systemLogger().info(String.format("[LIFECYCLE] actor (%s) stopped", actorLabel(cell.getActor())));
-	}
-	
-	protected void postRestart(Exception reason) {
-		cell.postStop();
-		try {
-			Actor newActor = (Actor)cell.getSystem().getContainer().getInstance(cell.getId());
-			newActor.setCell(cell);
-			cell.setActor(newActor);
-			cell.postRestart(reason);
-			systemLogger().info(String.format("[LIFECYCLE] actor (%s) restarted", actorLabel(cell.getActor()))); 
-		} catch (Exception e) {
-			throw new ActorInitializationException(); // never must occur
-		}
-	}
-	
-	public void apply(final Exception reason) {
-		final List<UUID> waitForChildren =new ArrayList<>(cell.getChildren().size());
-		
-		Iterator<UUID> iterator = cell.getChildren().iterator();
-		while (iterator.hasNext()) {
-			UUID dest = iterator.next();
-			cell.watch(dest);
-		}
-		iterator = cell.getChildren().iterator();
-		while (iterator.hasNext()) {
-			UUID dest = iterator.next();
-			waitForChildren.add(dest);
-			cell.getSystem().sendAsDirective(new ActorMessage<>(null, INTERNAL_STOP, cell.getId(), dest));
-		}
-		
-		if (waitForChildren.isEmpty()) {
-			postRestart(reason);
-			cell.setActiveDirectiveBehaviour(false);
-		}
-		else
-			cell.become(new Consumer<ActorMessage<?>>() {
-				protected boolean flag_stop;
-				@Override
-				public void accept(ActorMessage<?> message) {
-					if (message.tag==INTERNAL_STOP)
-						flag_stop = true;
-					else if (message.tag==INTERNAL_STOP_SUCCESS) {
-						waitForChildren.remove(message.source);
-						if (waitForChildren.isEmpty()) {
-							if (flag_stop)
-								postStop();
-							else {
-								postRestart(reason);
-								cell.unbecome();
-								cell.setActiveDirectiveBehaviour(false);
-							}
-						}
-					}
-				}
-			}, false);
-	}
+    protected final ActorCell cell;
+
+    public RestartProtocol(ActorCell cell) {
+        this.cell = cell;
+    }
+
+    protected void postStop() {
+        cell.postStop();
+        cell.internal_stop();
+        systemLogger().info(String.format("[LIFECYCLE] actor (%s) stopped", actorLabel(cell.getActor())));
+    }
+
+    protected void postRestart(Exception reason) {
+        cell.postStop();
+        try {
+            Actor newActor = (Actor) cell.getSystem().getContainer().getInstance(cell.getId());
+            newActor.setCell(cell);
+            cell.setActor(newActor);
+            cell.postRestart(reason);
+            systemLogger().info(String.format("[LIFECYCLE] actor (%s) restarted", actorLabel(cell.getActor())));
+        } catch (Exception e) {
+            throw new ActorInitializationException(); // never must occur
+        }
+    }
+
+    public void apply(final Exception reason) {
+        final List<UUID> waitForChildren = new ArrayList<>(cell.getChildren().size());
+
+        Iterator<UUID> iterator = cell.getChildren().iterator();
+        while (iterator.hasNext()) {
+            UUID dest = iterator.next();
+            cell.watch(dest);
+        }
+        iterator = cell.getChildren().iterator();
+        while (iterator.hasNext()) {
+            UUID dest = iterator.next();
+            waitForChildren.add(dest);
+            cell.getSystem().sendAsDirective(new ActorMessage<>(null, INTERNAL_STOP, cell.getId(), dest));
+        }
+
+        if (waitForChildren.isEmpty()) {
+            postRestart(reason);
+            cell.setActiveDirectiveBehaviour(false);
+        } else {
+            cell.become(new Consumer<ActorMessage<?>>() {
+                protected boolean flag_stop;
+
+                @Override
+                public void accept(ActorMessage<?> message) {
+                    if (message.tag == INTERNAL_STOP) {
+                        flag_stop = true;
+                    } else if (message.tag == INTERNAL_STOP_SUCCESS) {
+                        waitForChildren.remove(message.source);
+                        if (waitForChildren.isEmpty()) {
+                            if (flag_stop) {
+                                postStop();
+                            } else {
+                                postRestart(reason);
+                                cell.unbecome();
+                                cell.setActiveDirectiveBehaviour(false);
+                            }
+                        }
+                    }
+                }
+            }, false);
+        }
+    }
 }

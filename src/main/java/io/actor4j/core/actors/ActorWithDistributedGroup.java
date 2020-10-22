@@ -20,21 +20,22 @@ import java.util.UUID;
 import io.actor4j.core.utils.ActorGroup;
 
 public abstract class ActorWithDistributedGroup extends Actor implements ActorDistributedGroupMember {
-	protected UUID distributedGroupId;
-	
-	public ActorWithDistributedGroup(ActorGroup group) {
-		this(null, group);
-	}
-	
-	public ActorWithDistributedGroup(String name, ActorGroup group) {
-		super(name);
-		
-		distributedGroupId = group.getId();
-		//group.add(self());
-	}
 
-	@Override
-	public UUID getDistributedGroupId() {
-		return distributedGroupId;
-	}
+    protected UUID distributedGroupId;
+
+    public ActorWithDistributedGroup(ActorGroup group) {
+        this(null, group);
+    }
+
+    public ActorWithDistributedGroup(String name, ActorGroup group) {
+        super(name);
+
+        distributedGroupId = group.getId();
+        //group.add(self());
+    }
+
+    @Override
+    public UUID getDistributedGroupId() {
+        return distributedGroupId;
+    }
 }

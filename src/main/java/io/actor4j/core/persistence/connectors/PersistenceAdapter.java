@@ -21,23 +21,24 @@ import io.actor4j.core.ActorSystem;
 import io.actor4j.core.messages.ActorMessage;
 
 public abstract class PersistenceAdapter {
-	protected ActorSystem parent;
-	protected UUID id;
-	
-	protected PersistenceConnector connector;
-	
-	public PersistenceAdapter(ActorSystem parent, PersistenceConnector connector) {
-		this.parent = parent;
-		this.connector = connector;
-	}
 
-	public UUID self() {
-		return id;
-	}
-	
-	public void preStart(UUID id) {
-		this.id = id;
-	}
-	
-	public abstract void receive(ActorMessage<?> message);
+    protected ActorSystem parent;
+    protected UUID id;
+
+    protected PersistenceConnector connector;
+
+    public PersistenceAdapter(ActorSystem parent, PersistenceConnector connector) {
+        this.parent = parent;
+        this.connector = connector;
+    }
+
+    public UUID self() {
+        return id;
+    }
+
+    public void preStart(UUID id) {
+        this.id = id;
+    }
+
+    public abstract void receive(ActorMessage<?> message);
 }

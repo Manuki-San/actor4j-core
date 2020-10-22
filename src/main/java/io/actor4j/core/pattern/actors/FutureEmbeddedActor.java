@@ -24,33 +24,33 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.messages.FutureActorMessage;
 
 public class FutureEmbeddedActor extends EmbeddedActor {
-	protected CompletableFuture<Object> future;
-	protected UUID dest;
-	
-	public FutureEmbeddedActor(UUID dest, EmbeddedHostActor host) {
-		this(null, dest, host);
-	}
-	
-	public FutureEmbeddedActor(String name, UUID dest, EmbeddedHostActor host) {
-		super(name, host);
-		this.dest = dest;
-	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean receive(ActorMessage<?> message) {
-		boolean result = true;
-		
-		if (message instanceof FutureActorMessage<?>) {
-			future = ((FutureActorMessage<Object>)message).future;
-			host.tell(message.value, message.tag, dest);
-		}
-		else if (message.source==dest) {
-			future.complete(message.value);
-		}
-		else
-			result = false;
-		
-		return result;
-	}
+    protected CompletableFuture<Object> future;
+    protected UUID dest;
+
+    public FutureEmbeddedActor(UUID dest, EmbeddedHostActor host) {
+        this(null, dest, host);
+    }
+
+    public FutureEmbeddedActor(String name, UUID dest, EmbeddedHostActor host) {
+        super(name, host);
+        this.dest = dest;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean receive(ActorMessage<?> message) {
+        boolean result = true;
+
+        if (message instanceof FutureActorMessage<?>) {
+            future = ((FutureActorMessage<Object>) message).future;
+            host.tell(message.value, message.tag, dest);
+        } else if (message.source == dest) {
+            future.complete(message.value);
+        } else {
+            result = false;
+        }
+
+        return result;
+    }
 }

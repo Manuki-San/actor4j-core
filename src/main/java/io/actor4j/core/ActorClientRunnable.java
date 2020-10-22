@@ -18,6 +18,8 @@ package io.actor4j.core;
 import io.actor4j.core.messages.ActorMessage;
 
 public interface ActorClientRunnable {
-	public void runViaAlias(ActorMessage<?> message, String alias);
-	public void runViaPath(ActorMessage<?> message, ActorServiceNode node, String path);
+
+    public void runViaAlias(ActorMessage<?> message, String alias);
+
+    public void runViaPath(ActorMessage<?> message, ActorServiceNode node, String path);
 }

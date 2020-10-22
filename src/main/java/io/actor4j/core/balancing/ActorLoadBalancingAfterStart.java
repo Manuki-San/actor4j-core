@@ -33,81 +33,80 @@ import io.actor4j.core.actors.ActorGroupMember;
 import io.actor4j.core.actors.ActorIgnoreDistributedGroupMember;
 
 public class ActorLoadBalancingAfterStart {
-	protected AtomicInteger i;
-	protected AtomicInteger j;
-	protected AtomicInteger k;
-	
-	protected Lock lock;
-	
-	public ActorLoadBalancingAfterStart() {
-		super();
-		
-		i = new AtomicInteger(0);
-		j = new AtomicInteger(0);
-		k = new AtomicInteger(0);
-		
-		lock = new ReentrantLock();
-	}
-	
-	public void reset() {
-		i.set(0);
-		j.set(0);
-		k.set(0);
-	}
-	
-	public void registerCell(Map<UUID, Long> cellsMap, List<Long> threadsList, Map<Long, ActorThread> threadsMap, Map<UUID, Long> groupsMap, Map<UUID, Integer> groupsDistributedMap, ActorCell cell) {
-		lock.lock();
-		try {
-			Actor actor = cell.getActor();
-			if (actor instanceof ActorDistributedGroupMember && !(actor instanceof ActorIgnoreDistributedGroupMember)) {
-				Integer threadIndex = groupsDistributedMap.get(((ActorDistributedGroupMember)actor).getDistributedGroupId());
-				Long threadId = null;
-				if (threadIndex==null) {
-					threadId = threadsList.get(j.get());
-					groupsDistributedMap.put(((ActorDistributedGroupMember)actor).getDistributedGroupId(), j.get());
-				}
-				else {
-					threadIndex++;
-					if (threadIndex==threadsMap.size())
-						threadIndex = 0;
-					groupsDistributedMap.put(((ActorDistributedGroupMember)actor).getDistributedGroupId(), threadIndex);
-					threadId = threadsList.get(threadIndex);
-				}
-				cellsMap.put(cell.getId(), threadId);
-				
-				j.updateAndGet((index) -> index==threadsList.size()-1 ? 0 : index+1);
-				
-				if (actor instanceof ActorGroupMember) {
-					if (groupsMap.get(((ActorGroupMember)actor).getGroupId())==null)
-						groupsMap.put(((ActorGroupMember)actor).getGroupId(), threadId);
-					else
-						systemLogger().error(String.format("[LOAD BALANCING] actor (%s) must be first initial group member", actorLabel(cell.getActor())));
-				}
-			}
-			else if (actor instanceof ActorGroupMember) {
-				Long threadId = groupsMap.get(((ActorGroupMember)actor).getGroupId());
-				if (threadId==null) {
-					threadId = threadsList.get(i.updateAndGet((index) -> index==threadsList.size()-1 ? 0 : index+1));
-					groupsMap.put(((ActorGroupMember)actor).getGroupId(), threadId);
-				}
-				
-				cellsMap.put(cell.getId(), threadId);
-			}
-			else {
-				Long threadId = threadsList.get(k.updateAndGet((index) -> index==threadsList.size()-1 ? 0 : index+1));
-				cellsMap.put(cell.getId(), threadId);
-			}
-		}
-		finally {
-			lock.unlock();
-		}
-	}
-	
-	public void unregisterCell(Map<UUID, Long> cellsMap, Map<Long, ActorThread> threadsMap, Map<UUID, Long> groupsMap, Map<UUID, Integer> groupsDistributedMap, ActorCell cell) {
-		/*
+
+    protected AtomicInteger i;
+    protected AtomicInteger j;
+    protected AtomicInteger k;
+
+    protected Lock lock;
+
+    public ActorLoadBalancingAfterStart() {
+        super();
+
+        i = new AtomicInteger(0);
+        j = new AtomicInteger(0);
+        k = new AtomicInteger(0);
+
+        lock = new ReentrantLock();
+    }
+
+    public void reset() {
+        i.set(0);
+        j.set(0);
+        k.set(0);
+    }
+
+    public void registerCell(Map<UUID, Long> cellsMap, List<Long> threadsList, Map<Long, ActorThread> threadsMap, Map<UUID, Long> groupsMap, Map<UUID, Integer> groupsDistributedMap, ActorCell cell) {
+        lock.lock();
+        try {
+            Actor actor = cell.getActor();
+            if (actor instanceof ActorDistributedGroupMember && !(actor instanceof ActorIgnoreDistributedGroupMember)) {
+                Integer threadIndex = groupsDistributedMap.get(((ActorDistributedGroupMember) actor).getDistributedGroupId());
+                Long threadId = null;
+                if (threadIndex == null) {
+                    threadId = threadsList.get(j.get());
+                    groupsDistributedMap.put(((ActorDistributedGroupMember) actor).getDistributedGroupId(), j.get());
+                } else {
+                    threadIndex++;
+                    if (threadIndex == threadsMap.size()) {
+                        threadIndex = 0;
+                    }
+                    groupsDistributedMap.put(((ActorDistributedGroupMember) actor).getDistributedGroupId(), threadIndex);
+                    threadId = threadsList.get(threadIndex);
+                }
+                cellsMap.put(cell.getId(), threadId);
+
+                j.updateAndGet((index) -> index == threadsList.size() - 1 ? 0 : index + 1);
+
+                if (actor instanceof ActorGroupMember) {
+                    if (groupsMap.get(((ActorGroupMember) actor).getGroupId()) == null) {
+                        groupsMap.put(((ActorGroupMember) actor).getGroupId(), threadId);
+                    } else {
+                        systemLogger().error(String.format("[LOAD BALANCING] actor (%s) must be first initial group member", actorLabel(cell.getActor())));
+                    }
+                }
+            } else if (actor instanceof ActorGroupMember) {
+                Long threadId = groupsMap.get(((ActorGroupMember) actor).getGroupId());
+                if (threadId == null) {
+                    threadId = threadsList.get(i.updateAndGet((index) -> index == threadsList.size() - 1 ? 0 : index + 1));
+                    groupsMap.put(((ActorGroupMember) actor).getGroupId(), threadId);
+                }
+
+                cellsMap.put(cell.getId(), threadId);
+            } else {
+                Long threadId = threadsList.get(k.updateAndGet((index) -> index == threadsList.size() - 1 ? 0 : index + 1));
+                cellsMap.put(cell.getId(), threadId);
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void unregisterCell(Map<UUID, Long> cellsMap, Map<Long, ActorThread> threadsMap, Map<UUID, Long> groupsMap, Map<UUID, Integer> groupsDistributedMap, ActorCell cell) {
+        /*
 		 * eventually remove the group (when no more group members are available), for ActorGroupMember, ActorDistributedGroupMember
-		 */
-		
-		cellsMap.remove(cell.getId());
-	}
+         */
+
+        cellsMap.remove(cell.getId());
+    }
 }

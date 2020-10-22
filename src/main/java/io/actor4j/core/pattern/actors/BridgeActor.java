@@ -22,11 +22,12 @@ import io.actor4j.core.actors.Actor;
 import io.actor4j.core.messages.ActorMessage;
 
 public class BridgeActor extends PipeActor {
-	public BridgeActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> handler, UUID next) {
-		super(handler, next);
-	}
-	
-	public BridgeActor(String name, BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> handler, UUID next) {
-		super(name, handler, next);
-	}
+
+    public BridgeActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> handler, UUID next) {
+        super(handler, next);
+    }
+
+    public BridgeActor(String name, BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> handler, UUID next) {
+        super(name, handler, next);
+    }
 }

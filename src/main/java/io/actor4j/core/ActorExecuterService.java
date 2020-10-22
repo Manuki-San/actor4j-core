@@ -38,211 +38,214 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.persistence.ActorPersistenceService;
 
 public class ActorExecuterService {
-	protected final ActorSystemImpl system;
-	
-	protected final FailsafeManager failsafeManager;
-	
-	protected ActorThreadPool actorThreadPool;
-	protected Runnable onTermination;
-	
-	protected final AtomicBoolean started;
-	
-	protected ActorTimerExecuterService globalTimerExecuterService;
-	protected ActorTimerExecuterService timerExecuterService;
-	protected ExecutorService clientExecuterService;
-	protected ExecutorService resourceExecuterService;
-	
-	protected ActorPersistenceService persistenceService;
-	
-	protected ScheduledExecutorService podReplicationControllerExecuterService;
-	protected PodReplicationControllerRunnable podReplicationControllerRunnable;
-	
-	protected int maxResourceThreads;
-	
-	public ActorExecuterService(final ActorSystemImpl system) {
-		super();
-		
-		this.system = system;
-		
-		started = new AtomicBoolean();
-		
-		maxResourceThreads = 200;
-		
-		failsafeManager = new FailsafeManager();
-		failsafeManager.setErrorHandler(new ErrorHandler() {
-			@Override
-			public void handle(Throwable t, String message, UUID uuid) {
-				if (message!=null) {
-					if (message.equals("initialization")) {
-						systemLogger().error(
-							String.format("[SAFETY] Exception in initialization of an actor"));
-					}
-					else if (message.equals("actor") || message.equals("resource")) {
-						Actor actor = system.cells.get(uuid).actor;
-						systemLogger().error(
-								String.format("[SAFETY] Exception in actor: %s", actorLabel(actor)));
-					}
-					else if (message.equals("pseudo")) {
-						Actor actor = system.pseudoCells.get(uuid).actor;
-						systemLogger().error(
-								String.format("[SAFETY] Exception in actor: %s", actorLabel(actor)));
-					}
-					else if (message.equals("replication")) {
-						systemLogger().fatal(
-								String.format("[SAFETY] Exception in PodReplicationControllerThread"));
-					}
-				}
-				else {
-					systemLogger().fatal(
-						String.format("[SAFETY] Exception in ActorThread"));
-				}
-				
-				t.printStackTrace();
-			}
-		});
-	}
-	
-	protected void reset() {
-		started.set(false);
-	}
-	
-	public FailsafeManager getFailsafeManager() {
-		return failsafeManager;
-	}
-	
-	public ActorThreadPool getActorThreadPool() {
-		return actorThreadPool;
-	}
 
-	public void run(Runnable onStartup) {
-		start(onStartup, null);
-	}
-	
-	public void start(Runnable onStartup, Runnable onTermination) {
-		if (system.cells.size()==0)
-			return;
-		
-		int poolSize = Runtime.getRuntime().availableProcessors();
-		
-		globalTimerExecuterService = new ActorTimerExecuterService(system, 1, "actor4j-global-timer-thread");
-		timerExecuterService = new ActorTimerExecuterService(system, poolSize);
-		
-		resourceExecuterService = new ThreadPoolExecutor(poolSize, maxResourceThreads, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(), new DefaultThreadFactory("actor4j-resource-thread"));
-		if (system.clientMode)
-			clientExecuterService = Executors.newSingleThreadExecutor();
-		
-		if (system.persistenceMode) {
-			persistenceService = new ActorPersistenceService(system.wrapper, system.parallelismMin, system.parallelismFactor, system.persistenceConnector);
-			persistenceService.start();
-		}
-		
-		this.onTermination = onTermination;
-		
-		actorThreadPool = new ActorThreadPool(system);
-		
-		podReplicationControllerExecuterService = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("actor4j-replication-controller-thread"));
-		try {
-			Constructor<? extends PodReplicationControllerRunnable> constructor;
-			constructor = system.podReplicationControllerRunnableClass.getConstructor(ActorSystemImpl.class);
-			podReplicationControllerRunnable = constructor.newInstance(system);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (podReplicationControllerRunnable!=null)
-			podReplicationControllerExecuterService.scheduleAtFixedRate(podReplicationControllerRunnable, system.horizontalPodAutoscalerSyncTime, system.horizontalPodAutoscalerSyncTime, TimeUnit.MILLISECONDS);
-		
-		/*
+    protected final ActorSystemImpl system;
+
+    protected final FailsafeManager failsafeManager;
+
+    protected ActorThreadPool actorThreadPool;
+    protected Runnable onTermination;
+
+    protected final AtomicBoolean started;
+
+    protected ActorTimerExecuterService globalTimerExecuterService;
+    protected ActorTimerExecuterService timerExecuterService;
+    protected ExecutorService clientExecuterService;
+    protected ExecutorService resourceExecuterService;
+
+    protected ActorPersistenceService persistenceService;
+
+    protected ScheduledExecutorService podReplicationControllerExecuterService;
+    protected PodReplicationControllerRunnable podReplicationControllerRunnable;
+
+    protected int maxResourceThreads;
+
+    public ActorExecuterService(final ActorSystemImpl system) {
+        super();
+
+        this.system = system;
+
+        started = new AtomicBoolean();
+
+        maxResourceThreads = 200;
+
+        failsafeManager = new FailsafeManager();
+        failsafeManager.setErrorHandler(new ErrorHandler() {
+            @Override
+            public void handle(Throwable t, String message, UUID uuid) {
+                if (message != null) {
+                    if (message.equals("initialization")) {
+                        systemLogger().error(
+                                String.format("[SAFETY] Exception in initialization of an actor"));
+                    } else if (message.equals("actor") || message.equals("resource")) {
+                        Actor actor = system.cells.get(uuid).actor;
+                        systemLogger().error(
+                                String.format("[SAFETY] Exception in actor: %s", actorLabel(actor)));
+                    } else if (message.equals("pseudo")) {
+                        Actor actor = system.pseudoCells.get(uuid).actor;
+                        systemLogger().error(
+                                String.format("[SAFETY] Exception in actor: %s", actorLabel(actor)));
+                    } else if (message.equals("replication")) {
+                        systemLogger().fatal(
+                                String.format("[SAFETY] Exception in PodReplicationControllerThread"));
+                    }
+                } else {
+                    systemLogger().fatal(
+                            String.format("[SAFETY] Exception in ActorThread"));
+                }
+
+                t.printStackTrace();
+            }
+        });
+    }
+
+    protected void reset() {
+        started.set(false);
+    }
+
+    public FailsafeManager getFailsafeManager() {
+        return failsafeManager;
+    }
+
+    public ActorThreadPool getActorThreadPool() {
+        return actorThreadPool;
+    }
+
+    public void run(Runnable onStartup) {
+        start(onStartup, null);
+    }
+
+    public void start(Runnable onStartup, Runnable onTermination) {
+        if (system.cells.size() == 0) {
+            return;
+        }
+
+        int poolSize = Runtime.getRuntime().availableProcessors();
+
+        globalTimerExecuterService = new ActorTimerExecuterService(system, 1, "actor4j-global-timer-thread");
+        timerExecuterService = new ActorTimerExecuterService(system, poolSize);
+
+        resourceExecuterService = new ThreadPoolExecutor(poolSize, maxResourceThreads, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(), new DefaultThreadFactory("actor4j-resource-thread"));
+        if (system.clientMode) {
+            clientExecuterService = Executors.newSingleThreadExecutor();
+        }
+
+        if (system.persistenceMode) {
+            persistenceService = new ActorPersistenceService(system.wrapper, system.parallelismMin, system.parallelismFactor, system.persistenceConnector);
+            persistenceService.start();
+        }
+
+        this.onTermination = onTermination;
+
+        actorThreadPool = new ActorThreadPool(system);
+
+        podReplicationControllerExecuterService = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("actor4j-replication-controller-thread"));
+        try {
+            Constructor<? extends PodReplicationControllerRunnable> constructor;
+            constructor = system.podReplicationControllerRunnableClass.getConstructor(ActorSystemImpl.class);
+            podReplicationControllerRunnable = constructor.newInstance(system);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (podReplicationControllerRunnable != null) {
+            podReplicationControllerExecuterService.scheduleAtFixedRate(podReplicationControllerRunnable, system.horizontalPodAutoscalerSyncTime, system.horizontalPodAutoscalerSyncTime, TimeUnit.MILLISECONDS);
+        }
+
+        /*
 		 * necessary before executing onStartup; 
 		 * creating of childrens in Actor::preStart: childrens needs to register at the dispatcher
 		 * (see also ActorSystemImpl::internal_addCell)
-		 */
-		started.set(true);
-		
-		if (onStartup!=null)
-			onStartup.run();
-	}
-	
-	public boolean isStarted() {
-		return started.get();
-	}
+         */
+        started.set(true);
 
-	public ActorTimer timer() {
-		return timerExecuterService;
-	}
-	
-	public ActorTimer globalTimer() {
-		return globalTimerExecuterService;
-	}
+        if (onStartup != null) {
+            onStartup.run();
+        }
+    }
 
-	public void clientViaAlias(final ActorMessage<?> message, final String alias) {
-		if (system.clientRunnable!=null)
-			clientExecuterService.submit(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						system.clientRunnable.runViaAlias(message, alias);
-					}
-					catch(Throwable t) {
-						t.printStackTrace();
-					}	
-				}
-			});
-	}
-	
-	public void clientViaPath(final ActorMessage<?> message, final ActorServiceNode node, final String path) {
-		if (system.clientRunnable!=null)
-			clientExecuterService.submit(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						system.clientRunnable.runViaPath(message, node, path);
-					}
-					catch(Throwable t) {
-						t.printStackTrace();
-					}	
-				}
-			});
-	}
-	
-	public void resource(final ActorMessage<?> message) {
-		final ResourceActorCell cell = (ResourceActorCell)system.cells.get(message.dest);
-		if (cell!=null && cell.beforeRun(message)) {
-			resourceExecuterService.submit(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						cell.run(message);
-					}
-					catch(Throwable t) {
-						t.printStackTrace();
-					}	
-				}
-			});
-		}
-	}
-	
-	public void shutdown(boolean await) {
-		podReplicationControllerExecuterService.shutdown();
-		
-		globalTimerExecuterService.shutdown();
-		timerExecuterService.shutdown();
-		
-		resourceExecuterService.shutdown();
-		if (system.clientMode)
-			clientExecuterService.shutdown();
-		
-		actorThreadPool.shutdown(onTermination, await);
-		
-		if (system.persistenceMode)
-			persistenceService.shutdown();
-		
-		reset();
-	}
-	
-	public long getCount() {
-		return actorThreadPool!=null ? actorThreadPool.getCount() : 0;
-	}
-	public List<Long> getCounts() {
-		return actorThreadPool!=null ? actorThreadPool.getCounts() : new ArrayList<>();
-	}
+    public boolean isStarted() {
+        return started.get();
+    }
+
+    public ActorTimer timer() {
+        return timerExecuterService;
+    }
+
+    public ActorTimer globalTimer() {
+        return globalTimerExecuterService;
+    }
+
+    public void clientViaAlias(final ActorMessage<?> message, final String alias) {
+        if (system.clientRunnable != null) {
+            clientExecuterService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        system.clientRunnable.runViaAlias(message, alias);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    public void clientViaPath(final ActorMessage<?> message, final ActorServiceNode node, final String path) {
+        if (system.clientRunnable != null) {
+            clientExecuterService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        system.clientRunnable.runViaPath(message, node, path);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    public void resource(final ActorMessage<?> message) {
+        final ResourceActorCell cell = (ResourceActorCell) system.cells.get(message.dest);
+        if (cell != null && cell.beforeRun(message)) {
+            resourceExecuterService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        cell.run(message);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    public void shutdown(boolean await) {
+        podReplicationControllerExecuterService.shutdown();
+
+        globalTimerExecuterService.shutdown();
+        timerExecuterService.shutdown();
+
+        resourceExecuterService.shutdown();
+        if (system.clientMode) {
+            clientExecuterService.shutdown();
+        }
+
+        actorThreadPool.shutdown(onTermination, await);
+
+        if (system.persistenceMode) {
+            persistenceService.shutdown();
+        }
+
+        reset();
+    }
+
+    public long getCount() {
+        return actorThreadPool != null ? actorThreadPool.getCount() : 0;
+    }
+
+    public List<Long> getCounts() {
+        return actorThreadPool != null ? actorThreadPool.getCounts() : new ArrayList<>();
+    }
 }

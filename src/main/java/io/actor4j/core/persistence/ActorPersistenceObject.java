@@ -18,18 +18,18 @@ package io.actor4j.core.persistence;
 import java.util.UUID;
 
 public class ActorPersistenceObject {
-	public UUID persistenceId;
-	public long timeStamp;
-	public int index; // only used, if it has the same timestamp as the last one
 
-	public ActorPersistenceObject() {
-		super();
-		timeStamp = System.currentTimeMillis();
-	}
+    public UUID persistenceId;
+    public long timeStamp;
+    public int index; // only used, if it has the same timestamp as the last one
 
-	@Override
-	public String toString() {
-		return "ActorPersistenceObject [persistenceId=" + persistenceId + ", timeStamp=" + timeStamp + ", index="
-				+ index + "]";
-	}
+    public ActorPersistenceObject() {
+        super();
+        timeStamp = System.currentTimeMillis();
+    }
+
+    @Override
+    public String toString() {
+        return "ActorPersistenceObject [persistenceId=" + persistenceId + ", timeStamp=" + timeStamp + ", index=" + index + "]";
+    }
 }

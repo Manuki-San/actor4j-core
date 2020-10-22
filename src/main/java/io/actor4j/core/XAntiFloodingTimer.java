@@ -16,39 +16,40 @@
 package io.actor4j.core;
 
 public class XAntiFloodingTimer {
-	protected int count;
-	protected int maxCount;
-	protected long withinTimeRange;
-	
-	protected long startTime;
-	protected long stopTime;
-	
-	protected boolean active;
-	
-	public XAntiFloodingTimer(int maxCount, long withinTimeRange) {
-		this.maxCount = maxCount;
-		this.withinTimeRange = withinTimeRange;
-	}
-	
-	protected boolean isInTimeRange() {
-		boolean result = true;
-		
-		if (!active) {
-			active = true;
-			count = 1;
-			startTime = System.currentTimeMillis();
-			stopTime  = startTime;
-		}
-		else
-			count++;
-		
-		stopTime  = System.currentTimeMillis();
-		result = ((stopTime-startTime) <= withinTimeRange) && (maxCount>0 ? count<maxCount : true);
-		
-		return result;
-	}
-	
-	protected void inactive() {
-		active = false;
-	}
+
+    protected int count;
+    protected int maxCount;
+    protected long withinTimeRange;
+
+    protected long startTime;
+    protected long stopTime;
+
+    protected boolean active;
+
+    public XAntiFloodingTimer(int maxCount, long withinTimeRange) {
+        this.maxCount = maxCount;
+        this.withinTimeRange = withinTimeRange;
+    }
+
+    protected boolean isInTimeRange() {
+        boolean result = true;
+
+        if (!active) {
+            active = true;
+            count = 1;
+            startTime = System.currentTimeMillis();
+            stopTime = startTime;
+        } else {
+            count++;
+        }
+
+        stopTime = System.currentTimeMillis();
+        result = ((stopTime - startTime) <= withinTimeRange) && (maxCount > 0 ? count < maxCount : true);
+
+        return result;
+    }
+
+    protected void inactive() {
+        active = false;
+    }
 }

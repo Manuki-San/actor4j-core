@@ -23,21 +23,29 @@ import org.jctools.queues.MpscArrayQueue;
 import org.jctools.queues.MpscLinkedQueue;
 
 public class BoundedActorThread extends DefaultActorThread {
-	public BoundedActorThread(ThreadGroup group, String name, ActorSystemImpl system) {
-		super(group, name, system);
-	}
 
-	@Override
-	public void configQueues() {
-		directiveQueue = new MpscLinkedQueue<>(); /* unbounded */
-		priorityQueue  = new PriorityBlockingQueue<>(system.getQueueSize()); /* unbounded */
-		
-		serverQueueL2  = new MpscArrayQueue<>(system.getQueueSize()); /* bounded */
-		serverQueueL1  = new ArrayDeque<>(system.getBufferQueueSize()); /* unbounded */
-		
-		outerQueueL2   = new MpscArrayQueue<>(system.getQueueSize()); /* bounded */
-		outerQueueL1   = new ArrayDeque<>(system.getBufferQueueSize()); /* unbounded */
-		
-		innerQueue     = new CircularFifoQueue<>(system.getQueueSize()); /* bounded */
-	}
+    public BoundedActorThread(ThreadGroup group, String name, ActorSystemImpl system) {
+        super(group, name, system);
+    }
+
+    @Override
+    public void configQueues() {
+        directiveQueue = new MpscLinkedQueue<>();
+        /* unbounded */
+        priorityQueue = new PriorityBlockingQueue<>(system.getQueueSize());
+        /* unbounded */
+
+        serverQueueL2 = new MpscArrayQueue<>(system.getQueueSize());
+        /* bounded */
+        serverQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
+        /* unbounded */
+
+        outerQueueL2 = new MpscArrayQueue<>(system.getQueueSize());
+        /* bounded */
+        outerQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
+        /* unbounded */
+
+        innerQueue = new CircularFifoQueue<>(system.getQueueSize());
+        /* bounded */
+    }
 }

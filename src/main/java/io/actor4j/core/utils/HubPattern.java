@@ -21,55 +21,58 @@ import io.actor4j.core.actors.ActorRef;
 import io.actor4j.core.messages.ActorMessage;
 
 public class HubPattern {
-	protected ActorRef actorRef;
-	
-	protected ActorGroupSet ports;
 
-	public HubPattern(ActorRef actorRef) {
-		super();
-		
-		this.actorRef = actorRef;
-		
-		ports = new ActorGroupSet();
-	}
-	
-	public HubPattern(ActorRef actorRef, ActorGroup group) {
-		this(actorRef);
-		
-		ports.addAll(group);
-	}
-	
-	public ActorGroup getPorts() {
-		return ports;
-	}
+    protected ActorRef actorRef;
 
-	public void add(UUID id) {
-		ports.add(id);
-	}
-	
-	public void addAll(ActorGroup group) {
-		ports.addAll(group);
-	}
-	
-	public void remove(UUID id) {
-		ports.remove(id);
-	}
-	
-	public boolean contains(UUID id) {
-		return ports.contains(id);
-	}
-	
-	public int count() {
-		return ports.size();
-	}
-	
-	public void broadcast(ActorMessage<?> message) {
-		for (UUID dest : ports)
-			actorRef.send(message, dest);
-	}
-	
-	public <T> void broadcast(T value, int tag) {
-		for (UUID dest : ports)
-			actorRef.tell(value, tag, dest);
-	}
+    protected ActorGroupSet ports;
+
+    public HubPattern(ActorRef actorRef) {
+        super();
+
+        this.actorRef = actorRef;
+
+        ports = new ActorGroupSet();
+    }
+
+    public HubPattern(ActorRef actorRef, ActorGroup group) {
+        this(actorRef);
+
+        ports.addAll(group);
+    }
+
+    public ActorGroup getPorts() {
+        return ports;
+    }
+
+    public void add(UUID id) {
+        ports.add(id);
+    }
+
+    public void addAll(ActorGroup group) {
+        ports.addAll(group);
+    }
+
+    public void remove(UUID id) {
+        ports.remove(id);
+    }
+
+    public boolean contains(UUID id) {
+        return ports.contains(id);
+    }
+
+    public int count() {
+        return ports.size();
+    }
+
+    public void broadcast(ActorMessage<?> message) {
+        for (UUID dest : ports) {
+            actorRef.send(message, dest);
+        }
+    }
+
+    public <T> void broadcast(T value, int tag) {
+        for (UUID dest : ports) {
+            actorRef.tell(value, tag, dest);
+        }
+    }
 }

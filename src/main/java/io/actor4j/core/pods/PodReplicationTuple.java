@@ -16,34 +16,35 @@
 package io.actor4j.core.pods;
 
 public class PodReplicationTuple {
-	protected final PodConfiguration podConfiguration;
-	protected final PodSystemConfiguration podSystemConfiguration;
-	
-	protected final String jarFileName;
-	
-	public PodReplicationTuple(PodConfiguration podConfiguration, PodSystemConfiguration podSystemConfiguration) {
-		super();
-		this.podConfiguration = podConfiguration;
-		this.podSystemConfiguration = podSystemConfiguration;
-		this.jarFileName = null;
-	}
-	
-	public PodReplicationTuple(PodConfiguration podConfiguration, PodSystemConfiguration podSystemConfiguration, String jarFileName) {
-		super();
-		this.podConfiguration = podConfiguration;
-		this.podSystemConfiguration = podSystemConfiguration;
-		this.jarFileName = jarFileName;
-	}
-	
-	public boolean hasJarFile() {
-		return jarFileName!=null;
-	}
 
-	public PodConfiguration getPodConfiguration() {
-		return podConfiguration;
-	}
+    protected final PodConfiguration podConfiguration;
+    protected final PodSystemConfiguration podSystemConfiguration;
 
-	public PodSystemConfiguration getPodSystemConfiguration() {
-		return podSystemConfiguration;
-	}
+    protected final String jarFileName;
+
+    public PodReplicationTuple(PodConfiguration podConfiguration, PodSystemConfiguration podSystemConfiguration) {
+        super();
+        this.podConfiguration = podConfiguration;
+        this.podSystemConfiguration = podSystemConfiguration;
+        this.jarFileName = null;
+    }
+
+    public PodReplicationTuple(PodConfiguration podConfiguration, PodSystemConfiguration podSystemConfiguration, String jarFileName) {
+        super();
+        this.podConfiguration = podConfiguration;
+        this.podSystemConfiguration = podSystemConfiguration;
+        this.jarFileName = jarFileName;
+    }
+
+    public boolean hasJarFile() {
+        return jarFileName != null;
+    }
+
+    public PodConfiguration getPodConfiguration() {
+        return podConfiguration;
+    }
+
+    public PodSystemConfiguration getPodSystemConfiguration() {
+        return podSystemConfiguration;
+    }
 }

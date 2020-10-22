@@ -22,45 +22,46 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.actor4j.core.utils.Utils;
 
 public class RemoteActorMessage<T> extends ActorMessage<T> {
-	public RemoteActorMessage(T value, int tag, UUID source, UUID dest) {
-		super(value, tag, source, dest);
-	}
-		
-	public RemoteActorMessage(T value, int tag, UUID source, UUID dest, UUID interaction, String protocol, String ontology) {
-		super(value, tag, source, dest, interaction, protocol, ontology);
-	}
 
-	@SuppressWarnings("unchecked")
-	public <C> C convertValue(Class<T> clazz) {
-		return (C)(new ObjectMapper().convertValue(value, clazz));
-	}
+    public RemoteActorMessage(T value, int tag, UUID source, UUID dest) {
+        super(value, tag, source, dest);
+    }
 
-	public boolean valueIsPrimitiveType() {
-		return Utils.isWrapperType(value.getClass());
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <C> C convertValue(ActorMessage<?> message, Class<C> clazz) {
-		C result = null;
-		if ((message instanceof RemoteActorMessage)) {
-			message.value = ((RemoteActorMessage<C>)message).convertValue(clazz);
-			result = (C)message.value;
-		}
-		return result;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <C> C optionalConvertValue(ActorMessage<?> message, Class<C> clazz) {
-		C result = null;
-		if ((message instanceof RemoteActorMessage) && !((RemoteActorMessage<?>)message).valueIsPrimitiveType()) {
-			message.value = ((RemoteActorMessage<C>)message).convertValue(clazz);
-			result = (C)message.value;
-		}
-		return result;
-	}
-	
-	@Override
-	public String toString() {
-		return "RemoteActorMessage [value=" + value + ", tag=" + tag + ", source=" + source + ", dest=" + dest + "]";
-	}
+    public RemoteActorMessage(T value, int tag, UUID source, UUID dest, UUID interaction, String protocol, String ontology) {
+        super(value, tag, source, dest, interaction, protocol, ontology);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <C> C convertValue(Class<T> clazz) {
+        return (C) (new ObjectMapper().convertValue(value, clazz));
+    }
+
+    public boolean valueIsPrimitiveType() {
+        return Utils.isWrapperType(value.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <C> C convertValue(ActorMessage<?> message, Class<C> clazz) {
+        C result = null;
+        if ((message instanceof RemoteActorMessage)) {
+            message.value = ((RemoteActorMessage<C>) message).convertValue(clazz);
+            result = (C) message.value;
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <C> C optionalConvertValue(ActorMessage<?> message, Class<C> clazz) {
+        C result = null;
+        if ((message instanceof RemoteActorMessage) && !((RemoteActorMessage<?>) message).valueIsPrimitiveType()) {
+            message.value = ((RemoteActorMessage<C>) message).convertValue(clazz);
+            result = (C) message.value;
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RemoteActorMessage [value=" + value + ", tag=" + tag + ", source=" + source + ", dest=" + dest + "]";
+    }
 }

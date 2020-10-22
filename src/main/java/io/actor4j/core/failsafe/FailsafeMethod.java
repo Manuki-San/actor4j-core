@@ -33,57 +33,58 @@ package io.actor4j.core.failsafe;
 import java.util.UUID;
 
 public final class FailsafeMethod {
-	public static void run(final FailsafeManager safetyManager, final String message, final Method method, UUID uuid) {
-		boolean error = false;
-		Exception exception = null;
-		
-		try {
-			method.run(uuid);
-		}
-		catch(Exception e) {
-			if (message!=null)
-				System.out.printf("Method failed: %s (UUID: %s)%n", message, uuid.toString());
-			
-			method.error(e);
-			error = true;
-			exception = e;
-		}
-		finally {
-			method.after();
-		}
-		
-		if (error)
-			safetyManager.notifyErrorHandler(exception, message, uuid);
-	}
-	
-	public static void runAndCatchThrowable(final FailsafeManager safetyManager, final String message, final Method method, UUID uuid) {
-		boolean error = false;
-		Throwable throwable = null;
-		
-		try {
-			method.run(uuid);
-		}
-		catch(Throwable t) {
-			if (message!=null)
-				System.out.printf("Method failed: %s (UUID: %s)%n", message, uuid.toString());
-			
-			method.error(t);
-			error = true;
-			throwable = t;
-		}
-		finally {
-			method.after();
-		}
-		
-		if (error)
-			safetyManager.notifyErrorHandler(throwable, message, uuid);
-	}
-	
-	public static void run(final FailsafeManager safetyManager, final Method method, UUID uuid) {
-		run(safetyManager, null, method, uuid);
-	}
-	
-	public static void runAndCatchThrowable(final FailsafeManager safetyManager, final Method method, UUID uuid) {
-		runAndCatchThrowable(safetyManager, null, method, uuid);
-	}
+
+    public static void run(final FailsafeManager safetyManager, final String message, final Method method, UUID uuid) {
+        boolean error = false;
+        Exception exception = null;
+
+        try {
+            method.run(uuid);
+        } catch (Exception e) {
+            if (message != null) {
+                System.out.printf("Method failed: %s (UUID: %s)%n", message, uuid.toString());
+            }
+
+            method.error(e);
+            error = true;
+            exception = e;
+        } finally {
+            method.after();
+        }
+
+        if (error) {
+            safetyManager.notifyErrorHandler(exception, message, uuid);
+        }
+    }
+
+    public static void runAndCatchThrowable(final FailsafeManager safetyManager, final String message, final Method method, UUID uuid) {
+        boolean error = false;
+        Throwable throwable = null;
+
+        try {
+            method.run(uuid);
+        } catch (Throwable t) {
+            if (message != null) {
+                System.out.printf("Method failed: %s (UUID: %s)%n", message, uuid.toString());
+            }
+
+            method.error(t);
+            error = true;
+            throwable = t;
+        } finally {
+            method.after();
+        }
+
+        if (error) {
+            safetyManager.notifyErrorHandler(throwable, message, uuid);
+        }
+    }
+
+    public static void run(final FailsafeManager safetyManager, final Method method, UUID uuid) {
+        run(safetyManager, null, method, uuid);
+    }
+
+    public static void runAndCatchThrowable(final FailsafeManager safetyManager, final Method method, UUID uuid) {
+        runAndCatchThrowable(safetyManager, null, method, uuid);
+    }
 }

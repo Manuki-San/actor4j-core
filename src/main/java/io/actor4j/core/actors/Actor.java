@@ -34,6 +34,9 @@ import io.actor4j.core.utils.ActorFactory;
 public abstract class Actor implements ActorRef {
 	protected ActorCell cell;
 	
+        /**
+         * name of the Actor
+         */
 	protected String name;
 	
 	protected Queue<ActorMessage<?>> stash; //must be initialized by hand

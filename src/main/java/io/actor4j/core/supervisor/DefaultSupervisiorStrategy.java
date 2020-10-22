@@ -21,15 +21,17 @@ import io.actor4j.core.exceptions.ActorInitializationException;
 import io.actor4j.core.exceptions.ActorKilledException;
 
 public class DefaultSupervisiorStrategy extends OneForOneSupervisorStrategy {
-	public DefaultSupervisiorStrategy() {
-		super(-1, Integer.MAX_VALUE);
-	}
 
-	@Override
-	public SupervisorStrategyDirective apply(Exception e) {
-		if (e instanceof ActorInitializationException || e instanceof ActorKilledException)
-			return STOP;
-		else
-			return RESTART;
-	}
+    public DefaultSupervisiorStrategy() {
+        super(-1, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public SupervisorStrategyDirective apply(Exception e) {
+        if (e instanceof ActorInitializationException || e instanceof ActorKilledException) {
+            return STOP;
+        } else {
+            return RESTART;
+        }
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.actor4j.core.utils;
 
 import java.io.IOException;
@@ -23,39 +22,40 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class JsonUtils {
-	public static <T> T readValue(String content, Class<T> valueType) {
-		T result = null;
-		
-		try {
-			result = new ObjectMapper().readValue(content, valueType);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}			
 
-		return result;
-	}
-	
-	public <T> T readValue(String content, TypeReference<T> valueTypeRef) {
-		T result = null;
-		
-		try {
-			result = new ObjectMapper().readValue(content, valueTypeRef);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    public static <T> T readValue(String content, Class<T> valueType) {
+        T result = null;
 
-		return result;
-	}
-	
-	public static String toJson(Object value) {
-		String result = null;
-		
-		try {
-			result = new ObjectMapper().writeValueAsString(value);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
+        try {
+            result = new ObjectMapper().readValue(content, valueType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public <T> T readValue(String content, TypeReference<T> valueTypeRef) {
+        T result = null;
+
+        try {
+            result = new ObjectMapper().readValue(content, valueTypeRef);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public static String toJson(Object value) {
+        String result = null;
+
+        try {
+            result = new ObjectMapper().writeValueAsString(value);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }

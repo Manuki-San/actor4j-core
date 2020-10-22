@@ -31,5 +31,6 @@
 package io.actor4j.core.function;
 
 public interface Procedure {
-	public void apply();
+
+    public void apply();
 }

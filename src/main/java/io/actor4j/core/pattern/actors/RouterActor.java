@@ -24,28 +24,30 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorMessageMatcher;
 
 public class RouterActor extends Actor {
-	protected ActorMessageMatcher matcher;
-	
-	public RouterActor(List<RouteeHandler> routees) {
-		this(null, routees);
-	}
-	
-	public RouterActor(String name, List<RouteeHandler> routees) {
-		super(name);
-		
-		matcher = new ActorMessageMatcher();
-		
-		for (RouteeHandler handler : routees)
-			add(handler.getPredicate(), handler.getRoutee());
-		matcher.matchElse(msg -> unhandled(msg));
-	}
 
-	@Override
-	public void receive(ActorMessage<?> message) {
-		matcher.apply(message);
-	}
-	
-	public void add(Predicate<ActorMessage<?>> predicate, UUID routee) {
-		matcher.match(predicate, (msg) -> forward(msg, routee));
-	}
+    protected ActorMessageMatcher matcher;
+
+    public RouterActor(List<RouteeHandler> routees) {
+        this(null, routees);
+    }
+
+    public RouterActor(String name, List<RouteeHandler> routees) {
+        super(name);
+
+        matcher = new ActorMessageMatcher();
+
+        for (RouteeHandler handler : routees) {
+            add(handler.getPredicate(), handler.getRoutee());
+        }
+        matcher.matchElse(msg -> unhandled(msg));
+    }
+
+    @Override
+    public void receive(ActorMessage<?> message) {
+        matcher.apply(message);
+    }
+
+    public void add(Predicate<ActorMessage<?>> predicate, UUID routee) {
+        matcher.match(predicate, (msg) -> forward(msg, routee));
+    }
 }

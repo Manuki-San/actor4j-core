@@ -30,40 +30,37 @@
  */
 package io.actor4j.core.di;
 
-import io.actor4j.core.di.ConstructorInjector;
-import io.actor4j.core.di.FactoryInjector;
-
-// Adapted for actor4j
 public class DIMapEntry {
-	protected Class<?> base;
-	protected ConstructorInjector constructorInjector;
-	protected FactoryInjector<?> factoryInjector;
-	
-	public DIMapEntry() {
-		constructorInjector = new ConstructorInjector();
-	}
 
-	public Class<?> getBase() {
-		return base;
-	}
+    protected Class<?> base;
+    protected ConstructorInjector constructorInjector;
+    protected FactoryInjector<?> factoryInjector;
 
-	public void setBase(Class<?> base) {
-		this.base = base;
-	}
+    public DIMapEntry() {
+        constructorInjector = new ConstructorInjector();
+    }
 
-	public ConstructorInjector getConstructorInjector() {
-		return constructorInjector;
-	}
+    public Class<?> getBase() {
+        return base;
+    }
 
-	public void setConstructorInjector(ConstructorInjector constructorInjector) {
-		this.constructorInjector = constructorInjector;
-	}
+    public void setBase(Class<?> base) {
+        this.base = base;
+    }
 
-	public FactoryInjector<?> getFactoryInjector() {
-		return factoryInjector;
-	}
+    public ConstructorInjector getConstructorInjector() {
+        return constructorInjector;
+    }
 
-	public void setFactoryInjector(FactoryInjector<?> factoryInjector) {
-		this.factoryInjector = factoryInjector;
-	}
+    public void setConstructorInjector(ConstructorInjector constructorInjector) {
+        this.constructorInjector = constructorInjector;
+    }
+
+    public FactoryInjector<?> getFactoryInjector() {
+        return factoryInjector;
+    }
+
+    public void setFactoryInjector(FactoryInjector<?> factoryInjector) {
+        this.factoryInjector = factoryInjector;
+    }
 }

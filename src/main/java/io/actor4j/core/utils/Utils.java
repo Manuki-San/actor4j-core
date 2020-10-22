@@ -34,23 +34,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class Utils {
-	private static Set<Class<?>> PRIMITIVE_WRAPPERS;
-	
-	public static boolean isWrapperType(Class<?> type) {
-		return PRIMITIVE_WRAPPERS.contains(type);
-	}
-	
-	static {
-		PRIMITIVE_WRAPPERS = new HashSet<Class<?>>();
-		PRIMITIVE_WRAPPERS.add(Byte.class);
-		PRIMITIVE_WRAPPERS.add(Short.class);
-		PRIMITIVE_WRAPPERS.add(Integer.class);
-		PRIMITIVE_WRAPPERS.add(Long.class);
-		PRIMITIVE_WRAPPERS.add(Float.class);
-		PRIMITIVE_WRAPPERS.add(Double.class);
-		PRIMITIVE_WRAPPERS.add(Character.class);
-		PRIMITIVE_WRAPPERS.add(String.class);
-		PRIMITIVE_WRAPPERS.add(Boolean.class);
-		PRIMITIVE_WRAPPERS.add(Void.class);
-	}
+
+    private static Set<Class<?>> PRIMITIVE_WRAPPERS;
+
+    public static boolean isWrapperType(Class<?> type) {
+        return PRIMITIVE_WRAPPERS.contains(type);
+    }
+
+    static {
+        PRIMITIVE_WRAPPERS = new HashSet<Class<?>>();
+        PRIMITIVE_WRAPPERS.add(Byte.class);
+        PRIMITIVE_WRAPPERS.add(Short.class);
+        PRIMITIVE_WRAPPERS.add(Integer.class);
+        PRIMITIVE_WRAPPERS.add(Long.class);
+        PRIMITIVE_WRAPPERS.add(Float.class);
+        PRIMITIVE_WRAPPERS.add(Double.class);
+        PRIMITIVE_WRAPPERS.add(Character.class);
+        PRIMITIVE_WRAPPERS.add(String.class);
+        PRIMITIVE_WRAPPERS.add(Boolean.class);
+        PRIMITIVE_WRAPPERS.add(Void.class);
+    }
 }

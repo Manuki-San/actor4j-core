@@ -20,36 +20,37 @@ import java.util.HashSet;
 import java.util.UUID;
 
 public class ActorGroupSet extends HashSet<UUID> implements ActorGroup {
-	protected static final long serialVersionUID = 1L;
-	
-	protected final UUID id;
 
-	public ActorGroupSet() {
-		super();
-		
-		id = UUID.randomUUID();
-	}
+    protected static final long serialVersionUID = 1L;
 
-	public ActorGroupSet(Collection<UUID> c) {
-		super(c);
-		
-		id = UUID.randomUUID();
-	}
+    protected final UUID id;
 
-	public ActorGroupSet(int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
-		
-		id = UUID.randomUUID();
-	}
+    public ActorGroupSet() {
+        super();
 
-	public ActorGroupSet(int initialCapacity) {
-		super(initialCapacity);
-		
-		id = UUID.randomUUID();
-	}
+        id = UUID.randomUUID();
+    }
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
+    public ActorGroupSet(Collection<UUID> c) {
+        super(c);
+
+        id = UUID.randomUUID();
+    }
+
+    public ActorGroupSet(int initialCapacity, float loadFactor) {
+        super(initialCapacity, loadFactor);
+
+        id = UUID.randomUUID();
+    }
+
+    public ActorGroupSet(int initialCapacity) {
+        super(initialCapacity);
+
+        id = UUID.randomUUID();
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
 }

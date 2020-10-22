@@ -18,27 +18,29 @@ package io.actor4j.core;
 import java.lang.reflect.Constructor;
 
 public class ActorThreadFactory extends DefaultThreadFactory {
-   
+
     public ActorThreadFactory(String name) {
-    	super(name);
+        super(name);
     }
 
     public ActorThread newThread(ActorSystemImpl system) {
-    	ActorThread t = null;
-		try {
-			Constructor<? extends ActorThread> constructor = system.actorThreadClass.getConstructor(ThreadGroup.class, String.class, ActorSystemImpl.class);
-			t = constructor.newInstance(group, 
-	                name + "-worker-thread-" + index.getAndIncrement(), 
-	                system);
-	        
-	        if (t.isDaemon())
-	            t.setDaemon(false);
-	        if (t.getPriority() != Thread.NORM_PRIORITY)
-	            t.setPriority(Thread.NORM_PRIORITY);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+        ActorThread t = null;
+        try {
+            Constructor<? extends ActorThread> constructor = system.actorThreadClass.getConstructor(ThreadGroup.class, String.class, ActorSystemImpl.class);
+            t = constructor.newInstance(group,
+                    name + "-worker-thread-" + index.getAndIncrement(),
+                    system);
+
+            if (t.isDaemon()) {
+                t.setDaemon(false);
+            }
+            if (t.getPriority() != Thread.NORM_PRIORITY) {
+                t.setPriority(Thread.NORM_PRIORITY);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return t;
     }
 }

@@ -19,11 +19,11 @@ import io.actor4j.core.utils.ActorGroup;
 
 public abstract class StatelessActor extends ActorWithDistributedGroup {
 
-	public StatelessActor(ActorGroup group) {
-		super(group);
-	}
+    public StatelessActor(ActorGroup group) {
+        super(group);
+    }
 
-	public StatelessActor(String name, ActorGroup group) {
-		super(name, group);
-	}
+    public StatelessActor(String name, ActorGroup group) {
+        super(name, group);
+    }
 }

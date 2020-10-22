@@ -26,45 +26,46 @@ import io.actor4j.core.messages.ActorMessage;
 import io.reactivex.Flowable;
 
 public abstract class PseudoActor extends ActorWithRxStash {
-	public PseudoActor(ActorSystem system, boolean blocking) {
-		this(null, system, blocking);
-	}
-	
-	public PseudoActor(String name, ActorSystem system, boolean blocking) {
-		super(name);
-		
-		PseudoActorCell cell = new PseudoActorCell(system, this, blocking);
-		setCell(cell);
-		cell.system_addCell(cell);
-		/* preStart */
-		preStart();
-	}
 
-	public boolean run() {
-		return ((PseudoActorCell)cell).run();
-	}
-	
-	public boolean runOnce() {
-		return ((PseudoActorCell)cell).runOnce();
-	}
-	
-	public Flowable<ActorMessage<?>> runWithRx() {
-		return ((PseudoActorCell)cell).runWithRx();
-	}
-	
-	public ActorMessage<?> await() {
-		return ((PseudoActorCell)cell).await();
-	}
-	
-	public ActorMessage<?> await(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
-		return ((PseudoActorCell)cell).await(timeout, unit);
-	}
-	
-	public <T> T await(Predicate<ActorMessage<?>> predicate, Function<ActorMessage<?>, T> action, long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
-		return ((PseudoActorCell)cell).await(predicate, action, timeout, unit);
-	}
-	
-	public void reset() {
-		((PseudoActorCell)cell).reset();
-	}
+    public PseudoActor(ActorSystem system, boolean blocking) {
+        this(null, system, blocking);
+    }
+
+    public PseudoActor(String name, ActorSystem system, boolean blocking) {
+        super(name);
+
+        PseudoActorCell cell = new PseudoActorCell(system, this, blocking);
+        setCell(cell);
+        cell.system_addCell(cell);
+        /* preStart */
+        preStart();
+    }
+
+    public boolean run() {
+        return ((PseudoActorCell) cell).run();
+    }
+
+    public boolean runOnce() {
+        return ((PseudoActorCell) cell).runOnce();
+    }
+
+    public Flowable<ActorMessage<?>> runWithRx() {
+        return ((PseudoActorCell) cell).runWithRx();
+    }
+
+    public ActorMessage<?> await() {
+        return ((PseudoActorCell) cell).await();
+    }
+
+    public ActorMessage<?> await(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
+        return ((PseudoActorCell) cell).await(timeout, unit);
+    }
+
+    public <T> T await(Predicate<ActorMessage<?>> predicate, Function<ActorMessage<?>, T> action, long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
+        return ((PseudoActorCell) cell).await(predicate, action, timeout, unit);
+    }
+
+    public void reset() {
+        ((PseudoActorCell) cell).reset();
+    }
 }

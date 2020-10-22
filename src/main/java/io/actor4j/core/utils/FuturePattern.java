@@ -25,29 +25,30 @@ import io.actor4j.core.messages.FutureActorMessage;
 import io.actor4j.core.pattern.actors.FutureActor;
 
 public final class FuturePattern {
-	public static <T> Future<T> ask(T value, int tag, UUID dest, ActorRef actorRef) {
-		UUID mediator = actorRef.getSystem().addActor(() -> new FutureActor(dest, true));
-		
-		return ask(value, tag, dest, mediator, actorRef);
-	}
-	
-	public static <T> Future<T> ask(T value, int tag, UUID dest, UUID mediator, ActorRef actorRef) {	
-		CompletableFuture<T> result = new CompletableFuture<>();
-		actorRef.send(new FutureActorMessage<T>(result, value, tag, actorRef.self(), mediator));
-		
-		return result;
-	}
-	
-	public static <T> Future<T> ask(T value, int tag, UUID dest, ActorSystem system) {
-		UUID mediator = system.addActor(() -> new FutureActor(dest, true));
-		
-		return ask(value, tag, dest, mediator, system);
-	}
-	
-	public static <T> Future<T> ask(T value, int tag, UUID dest, UUID mediator, ActorSystem system) {	
-		CompletableFuture<T> result = new CompletableFuture<>();
-		system.send(new FutureActorMessage<T>(result, value, tag, system.SYSTEM_ID, mediator));
-		
-		return result;
-	}
+
+    public static <T> Future<T> ask(T value, int tag, UUID dest, ActorRef actorRef) {
+        UUID mediator = actorRef.getSystem().addActor(() -> new FutureActor(dest, true));
+
+        return ask(value, tag, dest, mediator, actorRef);
+    }
+
+    public static <T> Future<T> ask(T value, int tag, UUID dest, UUID mediator, ActorRef actorRef) {
+        CompletableFuture<T> result = new CompletableFuture<>();
+        actorRef.send(new FutureActorMessage<T>(result, value, tag, actorRef.self(), mediator));
+
+        return result;
+    }
+
+    public static <T> Future<T> ask(T value, int tag, UUID dest, ActorSystem system) {
+        UUID mediator = system.addActor(() -> new FutureActor(dest, true));
+
+        return ask(value, tag, dest, mediator, system);
+    }
+
+    public static <T> Future<T> ask(T value, int tag, UUID dest, UUID mediator, ActorSystem system) {
+        CompletableFuture<T> result = new CompletableFuture<>();
+        system.send(new FutureActorMessage<T>(result, value, tag, system.SYSTEM_ID, mediator));
+
+        return result;
+    }
 }

@@ -34,74 +34,75 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.actor4j.core.di.DIContainer;
-import io.actor4j.core.di.DIMapEntry;
-import io.actor4j.core.di.FactoryInjector;
-
 // Adapted for actor4j
 public class DIContainer<K> {
-	protected Map<K, DIMapEntry> diMap;
-	
-	public DIContainer() {
-		diMap = new ConcurrentHashMap<>();
-	}
 
-	public void registerConstructorInjector(K key, Class<?> base, Object... params) {
-		DIMapEntry entry = diMap.get(key);
-		if (entry==null)
-			entry = new DIMapEntry();
-		entry.setBase(base);
-		entry.getConstructorInjector().setParams(params);
-		
-		diMap.put(key, entry);
-	}
-	
-	public void registerFactoryInjector(K key, FactoryInjector<?> factoryInjector) {
-		DIMapEntry entry = diMap.get(key);
-		if (entry==null)
-			entry = new DIMapEntry();
-		entry.setFactoryInjector(factoryInjector);
-		
-		diMap.put(key, entry);
-	}
-	
-	protected Object buildInstance(Class<?> base, Object[] params) throws Exception {
-		Object result = null;
-		
-		Class<?>[] types = new Class<?>[params.length];
-		for (int i=0; i<params.length; i++)
-			types[i] = params[i].getClass();
-		
-		Constructor<?> c2 = base.getConstructor(types);
-		result = c2.newInstance(params);
-		
-		return result;
-	}
-	
-	public Object getInstance(K key) throws Exception {
-		Object result = null;
-		
-		DIMapEntry entry = diMap.get(key);
-		if (entry!=null) {
-			if (entry.getFactoryInjector()!=null)
-				result = entry.getFactoryInjector().create();
-			else {
-				if (entry.getConstructorInjector().getParams()!=null)
-					result = buildInstance(entry.getBase(), entry.getConstructorInjector().getParams());
-				else
-					// https://docs.oracle.com/javase/9/docs/api/java/lang/Class.html#newInstance--
-					result = entry.getBase().getDeclaredConstructor().newInstance();
-			}
-		}
-		
-		return result;
-	}
-	
-	public DIMapEntry unregister(K key) {
-		return diMap.remove(key);
-	}
-	
-	public static <K> DIContainer<K> create() {
-		return new DIContainer<>();
-	}
+    protected Map<K, DIMapEntry> diMap;
+
+    public DIContainer() {
+        diMap = new ConcurrentHashMap<>();
+    }
+
+    public void registerConstructorInjector(K key, Class<?> base, Object... params) {
+        DIMapEntry entry = diMap.get(key);
+        if (entry == null) {
+            entry = new DIMapEntry();
+        }
+        entry.setBase(base);
+        entry.getConstructorInjector().setParams(params);
+
+        diMap.put(key, entry);
+    }
+
+    public void registerFactoryInjector(K key, FactoryInjector<?> factoryInjector) {
+        DIMapEntry entry = diMap.get(key);
+        if (entry == null) {
+            entry = new DIMapEntry();
+        }
+        entry.setFactoryInjector(factoryInjector);
+
+        diMap.put(key, entry);
+    }
+
+    protected Object buildInstance(Class<?> base, Object[] params) throws Exception {
+        Object result = null;
+
+        Class<?>[] types = new Class<?>[params.length];
+        for (int i = 0; i < params.length; i++) {
+            types[i] = params[i].getClass();
+        }
+
+        Constructor<?> c2 = base.getConstructor(types);
+        result = c2.newInstance(params);
+
+        return result;
+    }
+
+    public Object getInstance(K key) throws Exception {
+        Object result = null;
+
+        DIMapEntry entry = diMap.get(key);
+        if (entry != null) {
+            if (entry.getFactoryInjector() != null) {
+                result = entry.getFactoryInjector().create();
+            } else {
+                if (entry.getConstructorInjector().getParams() != null) {
+                    result = buildInstance(entry.getBase(), entry.getConstructorInjector().getParams());
+                } else // https://docs.oracle.com/javase/9/docs/api/java/lang/Class.html#newInstance--
+                {
+                    result = entry.getBase().getDeclaredConstructor().newInstance();
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public DIMapEntry unregister(K key) {
+        return diMap.remove(key);
+    }
+
+    public static <K> DIContainer<K> create() {
+        return new DIContainer<>();
+    }
 }

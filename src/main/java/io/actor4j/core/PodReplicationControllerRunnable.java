@@ -21,44 +21,46 @@ import io.actor4j.core.failsafe.Method;
 import io.actor4j.core.failsafe.FailsafeMethod;
 
 public abstract class PodReplicationControllerRunnable implements Runnable {
-	protected final UUID uuid; // for failsafe
-	
-	protected final ActorSystemImpl system;
-	
-	protected Runnable onTermination;
-	
-	public PodReplicationControllerRunnable(ActorSystemImpl system) {
-		super();
-		
-		this.system = system;
-		uuid = UUID.randomUUID();
-	}
-	
-	public abstract void onRun();
-	
-	@Override
-	public void run() {
-		FailsafeMethod.runAndCatchThrowable(system.executerService.failsafeManager, "replication", new Method() {
-			@Override
-			public void run(UUID uuid) {
-				onRun();
-				
-				if (onTermination!=null)
-					onTermination.run();
-			}
-			
-			@Override
-			public void error(Throwable t) {
-				t.printStackTrace();
-			}
-			
-			@Override
-			public void after() {
-			}
-		}, uuid);
-	}
-	
-	public UUID getUUID() {
-		return uuid;
-	}
+
+    protected final UUID uuid; // for failsafe
+
+    protected final ActorSystemImpl system;
+
+    protected Runnable onTermination;
+
+    public PodReplicationControllerRunnable(ActorSystemImpl system) {
+        super();
+
+        this.system = system;
+        uuid = UUID.randomUUID();
+    }
+
+    public abstract void onRun();
+
+    @Override
+    public void run() {
+        FailsafeMethod.runAndCatchThrowable(system.executerService.failsafeManager, "replication", new Method() {
+            @Override
+            public void run(UUID uuid) {
+                onRun();
+
+                if (onTermination != null) {
+                    onTermination.run();
+                }
+            }
+
+            @Override
+            public void error(Throwable t) {
+                t.printStackTrace();
+            }
+
+            @Override
+            public void after() {
+            }
+        }, uuid);
+    }
+
+    public UUID getUUID() {
+        return uuid;
+    }
 }

@@ -19,30 +19,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class XActorSystemImpl extends DefaultActorSystemImpl {
-	protected final AtomicBoolean antiFloodingEnabled;
-	protected /*quasi final*/ Supplier<XAntiFloodingTimer> factoryAntiFloodingTimer;
-	
-	public XActorSystemImpl(ActorSystem wrapper) {
-		this(null, wrapper);
-	}
 
-	public XActorSystemImpl(String name, ActorSystem wrapper) {
-		super(name, wrapper);
-		
-		antiFloodingEnabled = new AtomicBoolean(false);
-		
-		messageDispatcher = new XActorMessageDispatcher(this);
-		actorThreadClass = XActorThread.class;
-	}
-	
-	public void setFactoryAntiFloodingTimer(Supplier<XAntiFloodingTimer> factoryAntiFloodingTimer) {
-		this.factoryAntiFloodingTimer = factoryAntiFloodingTimer;
-	}
+    protected final AtomicBoolean antiFloodingEnabled;
+    protected /*quasi final*/ Supplier<XAntiFloodingTimer> factoryAntiFloodingTimer;
 
-	@Override
-	public void start(Runnable onStartup, Runnable onTermination) {
-		if (factoryAntiFloodingTimer==null)
-			factoryAntiFloodingTimer =  () -> new XAntiFloodingTimer(queueSize*2, 5_000);
-		super.start(onStartup, onTermination);
-	}
+    public XActorSystemImpl(ActorSystem wrapper) {
+        this(null, wrapper);
+    }
+
+    public XActorSystemImpl(String name, ActorSystem wrapper) {
+        super(name, wrapper);
+
+        antiFloodingEnabled = new AtomicBoolean(false);
+
+        messageDispatcher = new XActorMessageDispatcher(this);
+        actorThreadClass = XActorThread.class;
+    }
+
+    public void setFactoryAntiFloodingTimer(Supplier<XAntiFloodingTimer> factoryAntiFloodingTimer) {
+        this.factoryAntiFloodingTimer = factoryAntiFloodingTimer;
+    }
+
+    @Override
+    public void start(Runnable onStartup, Runnable onTermination) {
+        if (factoryAntiFloodingTimer == null) {
+            factoryAntiFloodingTimer = () -> new XAntiFloodingTimer(queueSize * 2, 5_000);
+        }
+        super.start(onStartup, onTermination);
+    }
 }

@@ -20,24 +20,25 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 public class ActorGroupList extends LinkedList<UUID> implements ActorGroup {
-	protected static final long serialVersionUID = 8641920411195875484L;
-	
-	protected final UUID id;
-	
-	public ActorGroupList() {
-		super();
-		
-		id = UUID.randomUUID();
-	}
 
-	public ActorGroupList(Collection<UUID> c) {
-		super(c);
-		
-		id = UUID.randomUUID();
-	}
+    protected static final long serialVersionUID = 8641920411195875484L;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
+    protected final UUID id;
+
+    public ActorGroupList() {
+        super();
+
+        id = UUID.randomUUID();
+    }
+
+    public ActorGroupList(Collection<UUID> c) {
+        super(c);
+
+        id = UUID.randomUUID();
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
 }

@@ -21,19 +21,20 @@ import io.actor4j.core.actors.Actor;
 import io.actor4j.core.pods.PodContext;
 
 public class PodActorCell extends ActorCell {
-	protected volatile PodContext context;
-	
-	public PodActorCell(ActorSystemImpl system, Actor actor) {
-		super(system, actor);
-	}
-	
-	public PodContext getContext() {
-		return context;
-	}
-	
-	@Override
-	public void preStart() {
-		systemLogger().info(String.format("[REPLICATION] PodActor (%s, %s) starting", getContext().getDomain(), id));
-		super.preStart();
-	}
+
+    protected volatile PodContext context;
+
+    public PodActorCell(ActorSystemImpl system, Actor actor) {
+        super(system, actor);
+    }
+
+    public PodContext getContext() {
+        return context;
+    }
+
+    @Override
+    public void preStart() {
+        systemLogger().info(String.format("[REPLICATION] PodActor (%s, %s) starting", getContext().getDomain(), id));
+        super.preStart();
+    }
 }

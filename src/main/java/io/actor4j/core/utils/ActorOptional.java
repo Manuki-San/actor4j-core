@@ -18,37 +18,38 @@ package io.actor4j.core.utils;
 import java.util.Optional;
 
 public final class ActorOptional<T> {
-	protected Optional<T> optional;
-	
-	private ActorOptional() {
-		// empty
-	}
-	
-	private ActorOptional(Optional<T> optional) {
-		this.optional = optional;
-	}
-	
-	public static<T> ActorOptional<T> none() {
-		return new ActorOptional<>();
-	}
-	
-	public static<T> ActorOptional<T> empty() {
-		return new ActorOptional<>(Optional.empty());
-	}
-	
-	public static <T> ActorOptional<T> of(T value) {
-		return new ActorOptional<>(Optional.ofNullable(value));
-	}
-	
-	public T get() {
-		return isDone() ? (optional.isPresent() ? optional.get() : null) : null;
-	}
-	
-	public boolean isPresent() {
-		return isDone() ? optional.isPresent() : false;
-	}
-	
-	public boolean isDone() {
-		return optional!=null;
-	}
+
+    protected Optional<T> optional;
+
+    private ActorOptional() {
+        // empty
+    }
+
+    private ActorOptional(Optional<T> optional) {
+        this.optional = optional;
+    }
+
+    public static <T> ActorOptional<T> none() {
+        return new ActorOptional<>();
+    }
+
+    public static <T> ActorOptional<T> empty() {
+        return new ActorOptional<>(Optional.empty());
+    }
+
+    public static <T> ActorOptional<T> of(T value) {
+        return new ActorOptional<>(Optional.ofNullable(value));
+    }
+
+    public T get() {
+        return isDone() ? (optional.isPresent() ? optional.get() : null) : null;
+    }
+
+    public boolean isPresent() {
+        return isDone() ? optional.isPresent() : false;
+    }
+
+    public boolean isDone() {
+        return optional != null;
+    }
 }

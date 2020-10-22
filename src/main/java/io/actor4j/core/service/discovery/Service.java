@@ -21,24 +21,25 @@ import java.util.UUID;
 import io.actor4j.core.utils.Shareable;
 
 public class Service implements Shareable {
-	public final UUID id;
-	public final String name; // or for nodeName
-	public final String uri;  // or for path
-	public final List<String> topics;
-	public final String version;
-	public final String description;
-	
-	public Service(String name, String uri, List<String> topics, String version, String description) {
-		super();
-		id = UUID.randomUUID();
-		this.name = name;
-		this.uri = uri;
-		this.topics = topics;
-		this.version = version;
-		this.description = description;
-	}
 
-	public boolean isPath() {
-		return uri!=null ? uri.indexOf("http")==-1 || uri.indexOf("https")==-1 : false;
-	}
+    public final UUID id;
+    public final String name; // or for nodeName
+    public final String uri;  // or for path
+    public final List<String> topics;
+    public final String version;
+    public final String description;
+
+    public Service(String name, String uri, List<String> topics, String version, String description) {
+        super();
+        id = UUID.randomUUID();
+        this.name = name;
+        this.uri = uri;
+        this.topics = topics;
+        this.version = version;
+        this.description = description;
+    }
+
+    public boolean isPath() {
+        return uri != null ? uri.indexOf("http") == -1 || uri.indexOf("https") == -1 : false;
+    }
 }

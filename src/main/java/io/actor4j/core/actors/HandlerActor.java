@@ -23,50 +23,53 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorMessageMatcher;
 
 public class HandlerActor extends EmbeddedHostActor {
-	protected ActorMessageMatcher matcher;
-	
-	public HandlerActor() {
-		this(null, false);
-	}
 
-	public HandlerActor(boolean redirectEnabled) {
-		this(null, redirectEnabled);
-	}
+    protected ActorMessageMatcher matcher;
 
-	public HandlerActor(String name, boolean redirectEnabled) {
-		super(name, redirectEnabled);
-		
-		matcher = new ActorMessageMatcher();
-	}
+    public HandlerActor() {
+        this(null, false);
+    }
 
-	public HandlerActor(String name) {
-		this(name, false);
-	}
+    public HandlerActor(boolean redirectEnabled) {
+        this(null, redirectEnabled);
+    }
 
-	@Override
-	public void receive(ActorMessage<?> message) {
-		if (!matcher.apply(message))
-			unhandled(message);
-	}
-	
-	public void handle(ActorMessage<?> message, BiConsumer<ActorMessage<?>, EmbeddedActor> handler, Predicate<ActorMessage<?>> done) {
-		UUID id = message.interaction;
-		EmbeddedActor embeddedActor = router.get(id);
-		if (embeddedActor!=null)
-			embeddedActor.embedded(message);
-		else {
-			embeddedActor = new EmbeddedActor("", this, id) {
-				@Override
-				public boolean receive(ActorMessage<?> message) {
-					handler.accept(message, this);
-					
-					return true;
-				}
-			};
-			addEmbeddedChild(embeddedActor);
-			embeddedActor.embedded(message);
-		}
-		if (done.test(message))
-			removeEmbeddedChild(embeddedActor);
-	}
+    public HandlerActor(String name, boolean redirectEnabled) {
+        super(name, redirectEnabled);
+
+        matcher = new ActorMessageMatcher();
+    }
+
+    public HandlerActor(String name) {
+        this(name, false);
+    }
+
+    @Override
+    public void receive(ActorMessage<?> message) {
+        if (!matcher.apply(message)) {
+            unhandled(message);
+        }
+    }
+
+    public void handle(ActorMessage<?> message, BiConsumer<ActorMessage<?>, EmbeddedActor> handler, Predicate<ActorMessage<?>> done) {
+        UUID id = message.interaction;
+        EmbeddedActor embeddedActor = router.get(id);
+        if (embeddedActor != null) {
+            embeddedActor.embedded(message);
+        } else {
+            embeddedActor = new EmbeddedActor("", this, id) {
+                @Override
+                public boolean receive(ActorMessage<?> message) {
+                    handler.accept(message, this);
+
+                    return true;
+                }
+            };
+            addEmbeddedChild(embeddedActor);
+            embeddedActor.embedded(message);
+        }
+        if (done.test(message)) {
+            removeEmbeddedChild(embeddedActor);
+        }
+    }
 }

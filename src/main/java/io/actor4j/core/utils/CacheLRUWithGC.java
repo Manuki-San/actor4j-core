@@ -22,106 +22,107 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class CacheLRUWithGC<K, V> implements Cache<K, V>  {
-	protected static class Pair<V> {
-		public V value;
-		public long timestamp;
-		
-		public Pair(V value, long timestamp) {
-			this.value = value;
-			this.timestamp = timestamp;
-		}
-	}
-	
-	protected Map<K, Pair<V>> map;
-	protected SortedMap<Long, K> lru;
-	
-	protected int size;
-	
-	public CacheLRUWithGC(int size) {
-		map = new HashMap<>(size);
-		lru = new TreeMap<>();
-		
-		this.size = size;
-	}
-		
-	public Map<K, Pair<V>> getMap() {
-		return map;
-	}
-	
-	public SortedMap<Long, K> getLru() {
-		return lru;
-	}
+public class CacheLRUWithGC<K, V> implements Cache<K, V> {
 
-	@Override
-	public V get(K key) {
-		V result = null;
-		
-		Pair<V> pair = map.get(key);
-		if (pair!=null) {
-			lru.remove(pair.timestamp);
-			pair.timestamp = System.nanoTime();
-			lru.put(pair.timestamp, key);
-			result = pair.value;
-		}
-		
-		return result;
-	}
-	
-	@Override
-	public V put(K key, V value) {
-		V result = null;
-		
-		long timestamp = System.nanoTime();
-		Pair<V> pair = map.put(key, new Pair<V>(value, timestamp));
-		if (pair==null) {
-			resize();
-			lru.put(timestamp, key);
-		}
-		else {
-			lru.remove(pair.timestamp);
-			lru.put(timestamp, key);
-			result = pair.value;
-		}
-		
-		return result;
-	}
-	
-	public void remove(K key) {
-		Pair<V> pair = map.get(key);
-		lru.remove(pair.timestamp);
-		map.remove(key);
-	}
-	
-	public void clear() {
-		map.clear();
-		lru.clear();
-	}
-	
-	protected void resize() {
-		if (map.size()>size) {
-			long timestamp = lru.firstKey();
-			map.remove(lru.get(timestamp));
-			lru.remove(timestamp);
-		}
-	}
-	
-	@Override
-	public void gc(long maxTime) {
-		long currentTime = System.currentTimeMillis();
-		
-		Iterator<Entry<Long, K>> iterator = lru.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<Long, K> entry = iterator.next();
-			if (currentTime-entry.getKey()/1_000_000>maxTime) {
-				map.remove(entry.getValue());
-				iterator.remove();
-			}
-		}
-	}
+    protected static class Pair<V> {
 
-	@Override
-	public String toString() {
-		return "CacheLRUWithGC [map=" + map + ", lru=" + lru + ", size=" + size + "]";
-	}
+        public V value;
+        public long timestamp;
+
+        public Pair(V value, long timestamp) {
+            this.value = value;
+            this.timestamp = timestamp;
+        }
+    }
+
+    protected Map<K, Pair<V>> map;
+    protected SortedMap<Long, K> lru;
+
+    protected int size;
+
+    public CacheLRUWithGC(int size) {
+        map = new HashMap<>(size);
+        lru = new TreeMap<>();
+
+        this.size = size;
+    }
+
+    public Map<K, Pair<V>> getMap() {
+        return map;
+    }
+
+    public SortedMap<Long, K> getLru() {
+        return lru;
+    }
+
+    @Override
+    public V get(K key) {
+        V result = null;
+
+        Pair<V> pair = map.get(key);
+        if (pair != null) {
+            lru.remove(pair.timestamp);
+            pair.timestamp = System.nanoTime();
+            lru.put(pair.timestamp, key);
+            result = pair.value;
+        }
+
+        return result;
+    }
+
+    @Override
+    public V put(K key, V value) {
+        V result = null;
+
+        long timestamp = System.nanoTime();
+        Pair<V> pair = map.put(key, new Pair<V>(value, timestamp));
+        if (pair == null) {
+            resize();
+            lru.put(timestamp, key);
+        } else {
+            lru.remove(pair.timestamp);
+            lru.put(timestamp, key);
+            result = pair.value;
+        }
+
+        return result;
+    }
+
+    public void remove(K key) {
+        Pair<V> pair = map.get(key);
+        lru.remove(pair.timestamp);
+        map.remove(key);
+    }
+
+    public void clear() {
+        map.clear();
+        lru.clear();
+    }
+
+    protected void resize() {
+        if (map.size() > size) {
+            long timestamp = lru.firstKey();
+            map.remove(lru.get(timestamp));
+            lru.remove(timestamp);
+        }
+    }
+
+    @Override
+    public void gc(long maxTime) {
+        long currentTime = System.currentTimeMillis();
+
+        Iterator<Entry<Long, K>> iterator = lru.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Entry<Long, K> entry = iterator.next();
+            if (currentTime - entry.getKey() / 1_000_000 > maxTime) {
+                map.remove(entry.getValue());
+                iterator.remove();
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "CacheLRUWithGC [map=" + map + ", lru=" + lru + ", size=" + size + "]";
+    }
 }

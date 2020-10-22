@@ -19,14 +19,15 @@ import io.actor4j.core.ActorPodService;
 import io.actor4j.core.pods.actors.PodActor;
 
 public abstract class ActorPod extends Pod {
-	public ActorPod() {
-		super();
-	}
-	
-	public abstract PodActor create();
 
-	@Override
-	public void register(ActorPodService service, PodContext context) {
-		service.addPodActor(() -> create(), context);
-	}
+    public ActorPod() {
+        super();
+    }
+
+    public abstract PodActor create();
+
+    @Override
+    public void register(ActorPodService service, PodContext context) {
+        service.addPodActor(() -> create(), context);
+    }
 }

@@ -22,43 +22,44 @@ import java.util.UUID;
 import io.actor4j.core.messages.ActorMessage;
 
 public abstract class ActorMessageDispatcher {
-	protected final ActorSystemImpl system;
-	
-	protected static final UUID UUID_ALIAS = UUID_ZERO;
-	
-	public ActorMessageDispatcher(ActorSystemImpl system) {
-		super();
-		
-		this.system = system;
-	}
 
-	public void post(ActorMessage<?> message, UUID source) {
-		post(message, source, null);
-	}
-	
-	public abstract void post(ActorMessage<?> message, UUID source, String alias);
-	
-	public abstract void post(ActorMessage<?> message, ActorServiceNode node, String path);
-	
-	public abstract void postOuter(ActorMessage<?> message);
-	
-	public abstract void postServer(ActorMessage<?> message);
-	
-	public abstract void postPriority(ActorMessage<?> message);
-	
-	public abstract void postDirective(ActorMessage<?> message);
-	
-	public abstract void postPersistence(ActorMessage<?> message);
-	
-	public void registerCell(ActorCell cell) {
-		system.executerService.actorThreadPool.actorThreadPoolHandler.registerCell(cell);
-	}
-	
-	public void unregisterCell(ActorCell cell) {
-		system.executerService.actorThreadPool.actorThreadPoolHandler.unregisterCell(cell);
-	}
-	
-	public boolean isRegisteredCell(ActorCell cell) {
-		return system.executerService.actorThreadPool.actorThreadPoolHandler.isRegisteredCell(cell);
-	}
+    protected final ActorSystemImpl system;
+
+    protected static final UUID UUID_ALIAS = UUID_ZERO;
+
+    public ActorMessageDispatcher(ActorSystemImpl system) {
+        super();
+
+        this.system = system;
+    }
+
+    public void post(ActorMessage<?> message, UUID source) {
+        post(message, source, null);
+    }
+
+    public abstract void post(ActorMessage<?> message, UUID source, String alias);
+
+    public abstract void post(ActorMessage<?> message, ActorServiceNode node, String path);
+
+    public abstract void postOuter(ActorMessage<?> message);
+
+    public abstract void postServer(ActorMessage<?> message);
+
+    public abstract void postPriority(ActorMessage<?> message);
+
+    public abstract void postDirective(ActorMessage<?> message);
+
+    public abstract void postPersistence(ActorMessage<?> message);
+
+    public void registerCell(ActorCell cell) {
+        system.executerService.actorThreadPool.actorThreadPoolHandler.registerCell(cell);
+    }
+
+    public void unregisterCell(ActorCell cell) {
+        system.executerService.actorThreadPool.actorThreadPoolHandler.unregisterCell(cell);
+    }
+
+    public boolean isRegisteredCell(ActorCell cell) {
+        return system.executerService.actorThreadPool.actorThreadPoolHandler.isRegisteredCell(cell);
+    }
 }

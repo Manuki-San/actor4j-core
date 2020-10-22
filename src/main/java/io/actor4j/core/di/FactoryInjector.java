@@ -31,5 +31,6 @@
 package io.actor4j.core.di;
 
 public interface FactoryInjector<T> {
-	public T create();
+
+    public T create();
 }

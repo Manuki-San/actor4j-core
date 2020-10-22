@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.actor4j.core.pods;
 
 import io.actor4j.core.utils.Shareable;
 
 public class RemotePodMessage implements Shareable {
-	public final RemotePodMessageDTO remotePodMessageDTO;
-	public final String replyAddress;
-	
-	public RemotePodMessage(RemotePodMessageDTO remotePodMessageDTO, String replyAddress) {
-		super();
-		this.remotePodMessageDTO = remotePodMessageDTO;
-		this.replyAddress = replyAddress;
-	}
 
-	@Override
-	public String toString() {
-		return "RemotePodMessage [remotePodMessageDTO=" + remotePodMessageDTO + ", replyAddress=" + replyAddress + "]";
-	}
+    public final RemotePodMessageDTO remotePodMessageDTO;
+    public final String replyAddress;
+
+    public RemotePodMessage(RemotePodMessageDTO remotePodMessageDTO, String replyAddress) {
+        super();
+        this.remotePodMessageDTO = remotePodMessageDTO;
+        this.replyAddress = replyAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "RemotePodMessage [remotePodMessageDTO=" + remotePodMessageDTO + ", replyAddress=" + replyAddress + "]";
+    }
 }

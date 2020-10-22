@@ -22,21 +22,22 @@ import java.util.UUID;
 import io.actor4j.core.actors.EmbeddedActor;
 
 public class ActorEmbeddedRouter extends HashMap<UUID, EmbeddedActor> {
-	protected static final long serialVersionUID = 1L;
 
-	public ActorEmbeddedRouter() {
-		super();
-	}
+    protected static final long serialVersionUID = 1L;
 
-	public ActorEmbeddedRouter(int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
-	}
+    public ActorEmbeddedRouter() {
+        super();
+    }
 
-	public ActorEmbeddedRouter(int initialCapacity) {
-		super(initialCapacity);
-	}
+    public ActorEmbeddedRouter(int initialCapacity, float loadFactor) {
+        super(initialCapacity, loadFactor);
+    }
 
-	public ActorEmbeddedRouter(Map<? extends UUID, ? extends EmbeddedActor> m) {
-		super(m);
-	}
+    public ActorEmbeddedRouter(int initialCapacity) {
+        super(initialCapacity);
+    }
+
+    public ActorEmbeddedRouter(Map<? extends UUID, ? extends EmbeddedActor> m) {
+        super(m);
+    }
 }

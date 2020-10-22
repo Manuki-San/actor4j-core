@@ -21,44 +21,45 @@ import java.util.UUID;
 import io.actor4j.core.messages.ActorMessage;
 
 public class ActorService extends ActorSystem {
-	public ActorService() {
-		this(null);
-	}
-	
-	public ActorService(String name) {
-		super(name);
-		serverMode();
-	}
-	
-	public String getServiceNodeName() {
-		return system.getServiceNodeName();
-	}
 
-	public void setServiceNodeName(String serviceNodeName) {
-		system.setServiceNodeName(serviceNodeName);
-	}
+    public ActorService() {
+        this(null);
+    }
 
-	public boolean hasActor(String uuid) {
-		return system.hasActor(uuid);
-	}
-	
-	public UUID getActorFromAlias(String alias) {
-		return system.getActorFromAlias(alias);
-	}
-	
-	public List<UUID> getActorsFromAlias(String alias) {
-		return system.getActorsFromAlias(alias);
-	}
-	
-	public boolean sendViaAliasAsServer(ActorMessage<?> message, String alias) {
-		return system.sendViaAliasAsServer(message, alias);
-	}
-	
-	public void sendAsServer(ActorMessage<?> message) {
-		system.sendAsServer(message);
-	}
-	
-	public ActorClientRunnable getClientRunnable() {
-		return system.getClientRunnable();
-	}
+    public ActorService(String name) {
+        super(name);
+        serverMode();
+    }
+
+    public String getServiceNodeName() {
+        return system.getServiceNodeName();
+    }
+
+    public void setServiceNodeName(String serviceNodeName) {
+        system.setServiceNodeName(serviceNodeName);
+    }
+
+    public boolean hasActor(String uuid) {
+        return system.hasActor(uuid);
+    }
+
+    public UUID getActorFromAlias(String alias) {
+        return system.getActorFromAlias(alias);
+    }
+
+    public List<UUID> getActorsFromAlias(String alias) {
+        return system.getActorsFromAlias(alias);
+    }
+
+    public boolean sendViaAliasAsServer(ActorMessage<?> message, String alias) {
+        return system.sendViaAliasAsServer(message, alias);
+    }
+
+    public void sendAsServer(ActorMessage<?> message) {
+        system.sendAsServer(message);
+    }
+
+    public ActorClientRunnable getClientRunnable() {
+        return system.getClientRunnable();
+    }
 }

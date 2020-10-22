@@ -32,17 +32,18 @@ package io.actor4j.core.di;
 
 // Adapted for actor4j
 public class ConstructorInjector {
-	protected Object[] params;
-	
-	public ConstructorInjector() {
-		super();
-	}
 
-	public Object[] getParams() {
-		return params;
-	}
+    protected Object[] params;
 
-	public void setParams(Object[] params) {
-		this.params = params;
-	}
+    public ConstructorInjector() {
+        super();
+    }
+
+    public Object[] getParams() {
+        return params;
+    }
+
+    public void setParams(Object[] params) {
+        this.params = params;
+    }
 }

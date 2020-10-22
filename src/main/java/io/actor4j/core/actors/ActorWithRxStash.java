@@ -22,20 +22,21 @@ import io.actor4j.core.utils.ActorMessageFlowable;
 import io.reactivex.Flowable;
 
 public abstract class ActorWithRxStash extends Actor {
-	protected Flowable<ActorMessage<?>> rxStash;
-	
-	public ActorWithRxStash() {
-		this(null);
-	}
-	
-	public ActorWithRxStash(String name) {
-		super(name);
-		
-		stash   = new LinkedList<>();
-		rxStash = ActorMessageFlowable.getMessages(stash);
-	}
-	
-	public ActorMessage<?> unstash() {
-		return stash.poll();
-	}
+
+    protected Flowable<ActorMessage<?>> rxStash;
+
+    public ActorWithRxStash() {
+        this(null);
+    }
+
+    public ActorWithRxStash(String name) {
+        super(name);
+
+        stash = new LinkedList<>();
+        rxStash = ActorMessageFlowable.getMessages(stash);
+    }
+
+    public ActorMessage<?> unstash() {
+        return stash.poll();
+    }
 }

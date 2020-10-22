@@ -23,34 +23,35 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.messages.FutureActorMessage;
 
 public class FutureActor extends Actor {
-	protected CompletableFuture<Object> future;
-	protected UUID dest;
-	
-	protected boolean stopOnComplete;
-	
-	public FutureActor(UUID dest, boolean stopOnComplete) {
-		this(null, dest, stopOnComplete);
-	}
 
-	public FutureActor(String name, UUID dest, boolean stopOnComplete) {
-		super(name);
-		this.dest = dest;
-		this.stopOnComplete = stopOnComplete;
-	}
+    protected CompletableFuture<Object> future;
+    protected UUID dest;
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void receive(ActorMessage<?> message) {
-		if (message instanceof FutureActorMessage<?>) {
-			future = ((FutureActorMessage<Object>)message).future;
-			tell(message.value, message.tag, dest);
-		}
-		else if (message.source==dest) {
-			future.complete(message.value);
-			if (stopOnComplete)
-				stop();
-		}
-		else
-			unhandled(message);
-	}
+    protected boolean stopOnComplete;
+
+    public FutureActor(UUID dest, boolean stopOnComplete) {
+        this(null, dest, stopOnComplete);
+    }
+
+    public FutureActor(String name, UUID dest, boolean stopOnComplete) {
+        super(name);
+        this.dest = dest;
+        this.stopOnComplete = stopOnComplete;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void receive(ActorMessage<?> message) {
+        if (message instanceof FutureActorMessage<?>) {
+            future = ((FutureActorMessage<Object>) message).future;
+            tell(message.value, message.tag, dest);
+        } else if (message.source == dest) {
+            future.complete(message.value);
+            if (stopOnComplete) {
+                stop();
+            }
+        } else {
+            unhandled(message);
+        }
+    }
 }

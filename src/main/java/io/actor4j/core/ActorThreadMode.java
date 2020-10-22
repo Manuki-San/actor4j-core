@@ -16,5 +16,5 @@
 package io.actor4j.core;
 
 public enum ActorThreadMode {
-	PARK, SLEEP, YIELD 
+    PARK, SLEEP, YIELD
 }

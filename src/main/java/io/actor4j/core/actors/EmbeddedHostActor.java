@@ -21,84 +21,92 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorEmbeddedRouter;
 
 public abstract class EmbeddedHostActor extends Actor {
-	protected ActorEmbeddedRouter router;
-	protected boolean redirectEnabled;
-	
-	public EmbeddedHostActor() {
-		this(null, false);
-	}
-	
-	public EmbeddedHostActor(String name) {
-		this(name, false);
-	}
-	
-	public EmbeddedHostActor(boolean redirectEnabled) {
-		this(null, redirectEnabled);
-	}
-	
-	public EmbeddedHostActor(String name, boolean redirectEnabled) {
-		super(name);
-		
-		this.redirectEnabled = redirectEnabled;
-		this.router = new ActorEmbeddedRouter();
-	}
-	
-	public ActorEmbeddedRouter getRouter() {
-		return router;
-	}
-	
-	public UUID addEmbeddedChild(EmbeddedActor embeddedActor) {
-		embeddedActor.host = this;
-		router.put(embeddedActor.getId(), embeddedActor);
-		if (redirectEnabled)
-			getSystem().addRedirection(embeddedActor.getId(), self());
-		
-		return embeddedActor.getId();
-	}
-	
-	public void removeEmbeddedChild(EmbeddedActor embeddedActor) {
-		embeddedActor.host = null;
-		router.remove(embeddedActor.id);
-		if (redirectEnabled)
-			getSystem().removeRedirection(embeddedActor.getId());
-	}	
-	
-	public boolean embedded(ActorMessage<?> message) {
-		boolean result = false;
-		
-		EmbeddedActor embeddedActor = router.get(message.dest);
-		if (embeddedActor!=null)
-			result = embeddedActor.embedded(message);
-		else if (message.dest.equals(self()))
-			receive(message);
-		
-		return result;
-	}
-	
-	public <T> boolean embedded(T value, int tag, UUID dest) {
-		boolean result = false;
-		
-		EmbeddedActor embeddedActor = router.get(dest);
-		if (embeddedActor!=null)
-			result = embeddedActor.embedded(value, tag, self(), dest);
-		else if (dest.equals(self()))
-			receive(new ActorMessage<T>(value, tag, self(), dest));
-		
-		return result;
-	}
-	
-	public void sendWithinHost(ActorMessage<?> message) {
-		EmbeddedActor embeddedActor = router.get(message.dest);
-		if (embeddedActor!=null)
-			embeddedActor.embedded(message.copy());
-		else if (message.dest.equals(self()))
-			receive(message.copy());
-	}
-	
-	@Override
-	public void postStop() {
-		for (EmbeddedActor embeddedActor : router.values())
-			if (redirectEnabled)
-				getSystem().removeRedirection(embeddedActor.getId());
-	}
+
+    protected ActorEmbeddedRouter router;
+    protected boolean redirectEnabled;
+
+    public EmbeddedHostActor() {
+        this(null, false);
+    }
+
+    public EmbeddedHostActor(String name) {
+        this(name, false);
+    }
+
+    public EmbeddedHostActor(boolean redirectEnabled) {
+        this(null, redirectEnabled);
+    }
+
+    public EmbeddedHostActor(String name, boolean redirectEnabled) {
+        super(name);
+
+        this.redirectEnabled = redirectEnabled;
+        this.router = new ActorEmbeddedRouter();
+    }
+
+    public ActorEmbeddedRouter getRouter() {
+        return router;
+    }
+
+    public UUID addEmbeddedChild(EmbeddedActor embeddedActor) {
+        embeddedActor.host = this;
+        router.put(embeddedActor.getId(), embeddedActor);
+        if (redirectEnabled) {
+            getSystem().addRedirection(embeddedActor.getId(), self());
+        }
+
+        return embeddedActor.getId();
+    }
+
+    public void removeEmbeddedChild(EmbeddedActor embeddedActor) {
+        embeddedActor.host = null;
+        router.remove(embeddedActor.id);
+        if (redirectEnabled) {
+            getSystem().removeRedirection(embeddedActor.getId());
+        }
+    }
+
+    public boolean embedded(ActorMessage<?> message) {
+        boolean result = false;
+
+        EmbeddedActor embeddedActor = router.get(message.dest);
+        if (embeddedActor != null) {
+            result = embeddedActor.embedded(message);
+        } else if (message.dest.equals(self())) {
+            receive(message);
+        }
+
+        return result;
+    }
+
+    public <T> boolean embedded(T value, int tag, UUID dest) {
+        boolean result = false;
+
+        EmbeddedActor embeddedActor = router.get(dest);
+        if (embeddedActor != null) {
+            result = embeddedActor.embedded(value, tag, self(), dest);
+        } else if (dest.equals(self())) {
+            receive(new ActorMessage<T>(value, tag, self(), dest));
+        }
+
+        return result;
+    }
+
+    public void sendWithinHost(ActorMessage<?> message) {
+        EmbeddedActor embeddedActor = router.get(message.dest);
+        if (embeddedActor != null) {
+            embeddedActor.embedded(message.copy());
+        } else if (message.dest.equals(self())) {
+            receive(message.copy());
+        }
+    }
+
+    @Override
+    public void postStop() {
+        for (EmbeddedActor embeddedActor : router.values()) {
+            if (redirectEnabled) {
+                getSystem().removeRedirection(embeddedActor.getId());
+            }
+        }
+    }
 }

@@ -31,45 +31,51 @@
 package io.actor4j.core.utils;
 
 public class Range {
-	public int low;
-	public int high;
 
-	public Range() {
-		super();
-	}
+    public int low;
+    public int high;
 
-	public Range(int low, int high) {
-		this.low = low;
-		this.high = high;
-	}
+    public Range() {
+        super();
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + high;
-		result = prime * result + low;
-		return result;
-	}
+    public Range(int low, int high) {
+        this.low = low;
+        this.high = high;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Range other = (Range) obj;
-		if (high != other.high)
-			return false;
-		if (low != other.low)
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + high;
+        result = prime * result + low;
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "Range [low=" + low + ", high=" + high + "]";
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Range other = (Range) obj;
+        if (high != other.high) {
+            return false;
+        }
+        if (low != other.low) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Range [low=" + low + ", high=" + high + "]";
+    }
 }

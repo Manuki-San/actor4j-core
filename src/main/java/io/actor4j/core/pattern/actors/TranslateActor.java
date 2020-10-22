@@ -22,11 +22,12 @@ import io.actor4j.core.actors.Actor;
 import io.actor4j.core.messages.ActorMessage;
 
 public class TranslateActor extends PipeActor {
-	public TranslateActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> translate, UUID next) {
-		super(translate, next);
-	}
-	
-	public TranslateActor(String name, BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> translate, UUID next) {
-		super(name, translate, next);
-	}
+
+    public TranslateActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> translate, UUID next) {
+        super(translate, next);
+    }
+
+    public TranslateActor(String name, BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> translate, UUID next) {
+        super(name, translate, next);
+    }
 }

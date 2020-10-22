@@ -20,24 +20,25 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.persistence.connectors.PersistenceAdapter;
 
 public class PersistenceServiceActor extends Actor {
-	protected PersistenceAdapter adapter;
-	
-	public static final int PERSIST_EVENTS = 100;
-	public static final int PERSIST_STATE  = 101;
-	public static final int RECOVER  	   = 102;
-	
-	public PersistenceServiceActor(String name, PersistenceAdapter adapter) {
-		super(name);
-		this.adapter = adapter;
-	}
 
-	@Override
-	public void preStart() {
-		adapter.preStart(self());
-	}
-	
-	@Override
-	public void receive(ActorMessage<?> message) {
-		adapter.receive(message);
-	}
+    protected PersistenceAdapter adapter;
+
+    public static final int PERSIST_EVENTS = 100;
+    public static final int PERSIST_STATE = 101;
+    public static final int RECOVER = 102;
+
+    public PersistenceServiceActor(String name, PersistenceAdapter adapter) {
+        super(name);
+        this.adapter = adapter;
+    }
+
+    @Override
+    public void preStart() {
+        adapter.preStart(self());
+    }
+
+    @Override
+    public void receive(ActorMessage<?> message) {
+        adapter.receive(message);
+    }
 }

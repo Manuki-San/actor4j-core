@@ -23,26 +23,27 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorGroup;
 
 public abstract class SecondaryActor extends ActorWithDistributedGroup {
-	protected /*final*/ UUID primary;
-	
-	public SecondaryActor(ActorGroup group, UUID primary) {
-		this(null, group, primary);
-	}
 
-	public SecondaryActor(String name, ActorGroup group, UUID primary) {
-		super(name, group);
-		this.primary = primary;
-	}
-	
-	public void publish(ActorMessage<?> message) {
-		send(message, primary);
-	}
-	
-	public <T> void publish(T value, int tag) {
-		tell(value, tag, primary);
-	}
-	
-	public void subscribeAsSecondary() {
-		tell(null, SUBSCRIBE_SECONDARY, primary);
-	}
+    protected /*final*/ UUID primary;
+
+    public SecondaryActor(ActorGroup group, UUID primary) {
+        this(null, group, primary);
+    }
+
+    public SecondaryActor(String name, ActorGroup group, UUID primary) {
+        super(name, group);
+        this.primary = primary;
+    }
+
+    public void publish(ActorMessage<?> message) {
+        send(message, primary);
+    }
+
+    public <T> void publish(T value, int tag) {
+        tell(value, tag, primary);
+    }
+
+    public void subscribeAsSecondary() {
+        tell(null, SUBSCRIBE_SECONDARY, primary);
+    }
 }

@@ -27,53 +27,56 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorFactory;
 
 public class ServiceDiscoveryManager {
-	protected ActorRef actorRef;
-	protected String serviceDiscoveryAlias;
 
-	public ServiceDiscoveryManager(ActorRef actorRef, String serviceDiscoveryAlias) {
-		super();
-		
-		this.actorRef = actorRef;
-		this.serviceDiscoveryAlias = serviceDiscoveryAlias;
-	}
-	
-	public ActorFactory create() {
-		return () -> new ServiceDiscoveryActor(serviceDiscoveryAlias);
-	}
-	
-	public static ActorFactory create(String serviceDiscoveryAlias) {
-		return () -> new ServiceDiscoveryActor(serviceDiscoveryAlias);
-	}
-	
-	public void publish(Service service) {
-		actorRef.tell(service, PUBLISH_SERVICE, serviceDiscoveryAlias);
-	}
-	
-	public void unpublish(UUID service) {
-		actorRef.tell(service, UNPUBLISH_SERVICE, serviceDiscoveryAlias);
-	}
-	
-	public void lookupFirst(String topic) {
-		actorRef.tell(topic, LOOKUP_SERVICE, serviceDiscoveryAlias);
-	}
-	
-	public void lookup(String topic) {
-		actorRef.tell(topic, LOOKUP_SERVICES, serviceDiscoveryAlias);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Optional<ImmutableObject<Service>> lookupFirst(ActorMessage<?> message) {	
-		if (message.tag==LOOKUP_SERVICE && message.value!=null && message.value instanceof ImmutableObject) 
-			return Optional.of(((ImmutableObject<Service>)message.value));
-		else
-			return Optional.empty();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Optional<ImmutableList<Service>> lookup(ActorMessage<?> message) {	
-		if (message.tag==LOOKUP_SERVICES && message.value!=null && message.value instanceof ImmutableList)
-			return Optional.of(((ImmutableList<Service>)message.value));
-		else
-			return Optional.empty();
-	}
+    protected ActorRef actorRef;
+    protected String serviceDiscoveryAlias;
+
+    public ServiceDiscoveryManager(ActorRef actorRef, String serviceDiscoveryAlias) {
+        super();
+
+        this.actorRef = actorRef;
+        this.serviceDiscoveryAlias = serviceDiscoveryAlias;
+    }
+
+    public ActorFactory create() {
+        return () -> new ServiceDiscoveryActor(serviceDiscoveryAlias);
+    }
+
+    public static ActorFactory create(String serviceDiscoveryAlias) {
+        return () -> new ServiceDiscoveryActor(serviceDiscoveryAlias);
+    }
+
+    public void publish(Service service) {
+        actorRef.tell(service, PUBLISH_SERVICE, serviceDiscoveryAlias);
+    }
+
+    public void unpublish(UUID service) {
+        actorRef.tell(service, UNPUBLISH_SERVICE, serviceDiscoveryAlias);
+    }
+
+    public void lookupFirst(String topic) {
+        actorRef.tell(topic, LOOKUP_SERVICE, serviceDiscoveryAlias);
+    }
+
+    public void lookup(String topic) {
+        actorRef.tell(topic, LOOKUP_SERVICES, serviceDiscoveryAlias);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Optional<ImmutableObject<Service>> lookupFirst(ActorMessage<?> message) {
+        if (message.tag == LOOKUP_SERVICE && message.value != null && message.value instanceof ImmutableObject) {
+            return Optional.of(((ImmutableObject<Service>) message.value));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Optional<ImmutableList<Service>> lookup(ActorMessage<?> message) {
+        if (message.tag == LOOKUP_SERVICES && message.value != null && message.value instanceof ImmutableList) {
+            return Optional.of(((ImmutableList<Service>) message.value));
+        } else {
+            return Optional.empty();
+        }
+    }
 }

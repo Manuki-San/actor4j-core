@@ -16,57 +16,58 @@
 package io.actor4j.core.pods;
 
 public class PodConfiguration {
-	protected final String domain;
-	protected final String className;
-	protected final int shardCount;
-	protected final int minReplica;
-	protected final int maxReplica;
-	
-	public PodConfiguration() {
-		super();
-		
-		domain = null;
-		className = null;
-		shardCount = 1;
-		minReplica = 1;
-		maxReplica = 1;
-	}
-	
-	public PodConfiguration(String domain, String className, int minReplica, int maxReplica) {
-		super();
-		this.domain = domain;
-		this.className = className;
-		this.shardCount = 1;
-		this.minReplica = minReplica;
-		this.maxReplica = maxReplica;
-	}
-	
-	public PodConfiguration(String domain, String className, int shardCount, int minReplica, int maxReplica) {
-		super();
-		this.domain = domain;
-		this.className = className;
-		this.shardCount = shardCount;
-		this.minReplica = minReplica;
-		this.maxReplica = maxReplica;
-	}
 
-	public String getDomain() {
-		return domain;
-	}
+    protected final String domain;
+    protected final String className;
+    protected final int shardCount;
+    protected final int minReplica;
+    protected final int maxReplica;
 
-	public String getClassName() {
-		return className;
-	}
+    public PodConfiguration() {
+        super();
 
-	public int getShardCount() {
-		return shardCount;
-	}
+        domain = null;
+        className = null;
+        shardCount = 1;
+        minReplica = 1;
+        maxReplica = 1;
+    }
 
-	public int getMinReplica() {
-		return minReplica;
-	}
+    public PodConfiguration(String domain, String className, int minReplica, int maxReplica) {
+        super();
+        this.domain = domain;
+        this.className = className;
+        this.shardCount = 1;
+        this.minReplica = minReplica;
+        this.maxReplica = maxReplica;
+    }
 
-	public int getMaxReplica() {
-		return maxReplica;
-	}
+    public PodConfiguration(String domain, String className, int shardCount, int minReplica, int maxReplica) {
+        super();
+        this.domain = domain;
+        this.className = className;
+        this.shardCount = shardCount;
+        this.minReplica = minReplica;
+        this.maxReplica = maxReplica;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public int getShardCount() {
+        return shardCount;
+    }
+
+    public int getMinReplica() {
+        return minReplica;
+    }
+
+    public int getMaxReplica() {
+        return maxReplica;
+    }
 }

@@ -21,15 +21,26 @@ import java.util.List;
 import io.actor4j.core.utils.Shareable;
 
 public class ImmutableList<T> implements Shareable {
-	protected final List<T> list;
-	
-	public ImmutableList(List<T> list) {
-		super();
-		
-		this.list = Collections.unmodifiableList(list);
-	}
 
-	public List<T> get() {
-		return list;
-	}
+    /**
+     * Immutable {@link List}
+     */
+    protected final List<T> list;
+
+    /**
+     * Creates an immutable list
+     * @param list 
+     */
+    public ImmutableList(List<T> list) {
+        super();
+        this.list = Collections.unmodifiableList(list);
+    }
+
+    /**
+     * Get the list
+     * @return the list
+     */
+    public List<T> get() {
+        return list;
+    }
 }

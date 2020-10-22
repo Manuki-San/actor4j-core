@@ -16,5 +16,6 @@
 package io.actor4j.core.pods;
 
 public interface Database<T> {
-	public T getClient(); 
+
+    public T getClient();
 }

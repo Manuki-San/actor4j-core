@@ -25,24 +25,26 @@ import io.actor4j.core.messages.ActorMessage;
 import static io.actor4j.core.utils.ActorLogger.systemLogger;
 
 public final class ActorUtils {
-	public static final Set<Integer> actorTags = new HashSet<>();
-	
-	public static final UUID UUID_ZERO = UUID.fromString("00000000-0000-0000-0000-000000000000");
-	
-	public static String actorLabel(ActorRef actorRef) {
-		return actorRef.getName()!=null ? actorRef.getName() : actorRef.getId().toString();
-	}
-	
-	public static boolean isDirective(ActorMessage<?> message) {
-		return message.tag<0;
-	}
-	
-	public static int checkTag(int tag) {
-		if (tag<0)
-			systemLogger().fatal(String.format("Tags below zero are system tags: %s", tag));
-		else if (!actorTags.add(tag))
-			systemLogger().error(String.format("Tag already exists: %s", tag));
-		
-		return tag;
-	}
+
+    public static final Set<Integer> actorTags = new HashSet<>();
+
+    public static final UUID UUID_ZERO = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+    public static String actorLabel(ActorRef actorRef) {
+        return actorRef.getName() != null ? actorRef.getName() : actorRef.getId().toString();
+    }
+
+    public static boolean isDirective(ActorMessage<?> message) {
+        return message.tag < 0;
+    }
+
+    public static int checkTag(int tag) {
+        if (tag < 0) {
+            systemLogger().fatal(String.format("Tags below zero are system tags: %s", tag));
+        } else if (!actorTags.add(tag)) {
+            systemLogger().error(String.format("Tag already exists: %s", tag));
+        }
+
+        return tag;
+    }
 }

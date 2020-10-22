@@ -18,11 +18,12 @@ package io.actor4j.core.actors;
 import io.actor4j.core.utils.ActorGroup;
 
 public abstract class ActorWithBothGroups extends ActorWithDistributedGroup implements ActorGroupMember {
-	public ActorWithBothGroups(ActorGroup group) {
-		super(group);
-	}
 
-	public ActorWithBothGroups(String name, ActorGroup group) {
-		super(name, group);
-	}
+    public ActorWithBothGroups(ActorGroup group) {
+        super(group);
+    }
+
+    public ActorWithBothGroups(String name, ActorGroup group) {
+        super(name, group);
+    }
 }

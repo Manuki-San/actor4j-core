@@ -30,64 +30,71 @@ import io.actor4j.core.actors.ActorDistributedGroupMember;
 import io.actor4j.core.actors.ActorGroupMember;
 
 public class ActorLoadBalancingBeforeStart {
-	public void registerCells(Map<UUID, Long> cellsMap, List<ActorThread> actorThreads, Map<UUID, Long> groupsMap, Map<UUID, Integer> groupsDistributedMap, Map<UUID, ActorCell> cells) {
-		List<UUID> buffer = new LinkedList<>();
-		for (UUID id : cells.keySet())
-			buffer.add(id);
-		
-		int i=0, j=0;
-		for (ActorCell cell : cells.values()) {
-			Actor actor = cell.getActor();
-			if (actor instanceof ActorDistributedGroupMember) {
-				Integer threadIndex = groupsDistributedMap.get(((ActorDistributedGroupMember)actor).getDistributedGroupId());
-				Long threadId = null;
-				if (threadIndex==null) {
-					threadId = actorThreads.get(j).getId();
-					groupsDistributedMap.put(((ActorDistributedGroupMember)actor).getDistributedGroupId(), j);
-				}
-				else {
-					threadIndex++;
-					if (threadIndex==actorThreads.size())
-						threadIndex = 0;
-					threadId = actorThreads.get(threadIndex).getId();
-					groupsDistributedMap.put(((ActorDistributedGroupMember)actor).getDistributedGroupId(), threadIndex);
-				}
-				if (buffer.remove(cell.getId()))
-					cellsMap.put(cell.getId(), threadId);
-				j++;
-				if (j==actorThreads.size())
-					j = 0;
-				
-				if (actor instanceof ActorGroupMember) {
-					if (groupsMap.get(((ActorGroupMember)actor).getGroupId())==null)
-						groupsMap.put(((ActorGroupMember)actor).getGroupId(), threadId);
-					else
-						systemLogger().error(String.format("[LOAD BALANCING] actor (%s) must be first initial group member", actorLabel(cell.getActor())));
-				}
-			}
-			else if (actor instanceof ActorGroupMember) {
-				Long threadId = groupsMap.get(((ActorGroupMember)actor).getGroupId());
-				if (threadId==null) {
-					threadId = actorThreads.get(i).getId();
-					groupsMap.put(((ActorGroupMember)actor).getGroupId(), threadId);
-					i++;
-					if (i==actorThreads.size())
-						i = 0;
-				}
-				if (buffer.remove(cell.getId()))
-					cellsMap.put(cell.getId(), threadId);
-			}
-		}	
-						
-		i=0;
-		for (UUID id : buffer) {
-			cellsMap.put(id, actorThreads.get(i).getId());
-			i++;
-			if (i==actorThreads.size())
-				i = 0;
-		}
-			
-		/*
+
+    public void registerCells(Map<UUID, Long> cellsMap, List<ActorThread> actorThreads, Map<UUID, Long> groupsMap, Map<UUID, Integer> groupsDistributedMap, Map<UUID, ActorCell> cells) {
+        List<UUID> buffer = new LinkedList<>();
+        for (UUID id : cells.keySet()) {
+            buffer.add(id);
+        }
+
+        int i = 0, j = 0;
+        for (ActorCell cell : cells.values()) {
+            Actor actor = cell.getActor();
+            if (actor instanceof ActorDistributedGroupMember) {
+                Integer threadIndex = groupsDistributedMap.get(((ActorDistributedGroupMember) actor).getDistributedGroupId());
+                Long threadId = null;
+                if (threadIndex == null) {
+                    threadId = actorThreads.get(j).getId();
+                    groupsDistributedMap.put(((ActorDistributedGroupMember) actor).getDistributedGroupId(), j);
+                } else {
+                    threadIndex++;
+                    if (threadIndex == actorThreads.size()) {
+                        threadIndex = 0;
+                    }
+                    threadId = actorThreads.get(threadIndex).getId();
+                    groupsDistributedMap.put(((ActorDistributedGroupMember) actor).getDistributedGroupId(), threadIndex);
+                }
+                if (buffer.remove(cell.getId())) {
+                    cellsMap.put(cell.getId(), threadId);
+                }
+                j++;
+                if (j == actorThreads.size()) {
+                    j = 0;
+                }
+
+                if (actor instanceof ActorGroupMember) {
+                    if (groupsMap.get(((ActorGroupMember) actor).getGroupId()) == null) {
+                        groupsMap.put(((ActorGroupMember) actor).getGroupId(), threadId);
+                    } else {
+                        systemLogger().error(String.format("[LOAD BALANCING] actor (%s) must be first initial group member", actorLabel(cell.getActor())));
+                    }
+                }
+            } else if (actor instanceof ActorGroupMember) {
+                Long threadId = groupsMap.get(((ActorGroupMember) actor).getGroupId());
+                if (threadId == null) {
+                    threadId = actorThreads.get(i).getId();
+                    groupsMap.put(((ActorGroupMember) actor).getGroupId(), threadId);
+                    i++;
+                    if (i == actorThreads.size()) {
+                        i = 0;
+                    }
+                }
+                if (buffer.remove(cell.getId())) {
+                    cellsMap.put(cell.getId(), threadId);
+                }
+            }
+        }
+
+        i = 0;
+        for (UUID id : buffer) {
+            cellsMap.put(id, actorThreads.get(i).getId());
+            i++;
+            if (i == actorThreads.size()) {
+                i = 0;
+            }
+        }
+
+        /*
 		int i=0;
 		for (UUID id : system.cells.keySet()) {
 			cellsMap.put(id, actorThreads.get(i).getId());
@@ -95,6 +102,6 @@ public class ActorLoadBalancingBeforeStart {
 			if (i==actorThreads.size())
 				i = 0;
 		}
-		*/
-	}
+         */
+    }
 }

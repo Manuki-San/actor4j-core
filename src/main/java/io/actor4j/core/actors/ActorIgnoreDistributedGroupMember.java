@@ -16,5 +16,5 @@
 package io.actor4j.core.actors;
 
 public interface ActorIgnoreDistributedGroupMember {
-	
+
 }

@@ -18,5 +18,6 @@ package io.actor4j.core.actors;
 import java.util.UUID;
 
 public interface PersistenceId {
-	public UUID persistenceId();
+
+    public UUID persistenceId();
 }

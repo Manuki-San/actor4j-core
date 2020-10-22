@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.actor4j.core.pods;
 
 public class RemotePodMessageDTO {
-	public final Object payload;
-	public final int tag;
-	public final String alias;
-	
-	public final boolean reply;
-	
-	public RemotePodMessageDTO() {
-		super();
-		this.payload = null;
-		this.tag = 0;
-		this.alias = null;
-		this.reply = false;
-	}
-	
-	public RemotePodMessageDTO(Object payload, int tag, String alias, boolean reply) {
-		super();
-		this.payload = payload;
-		this.tag = tag;
-		this.alias = alias;
-		this.reply = reply;
-	}
 
-	@Override
-	public String toString() {
-		return "RemotePodMessageDTO [payload=" + payload + ", tag=" + tag + ", alias=" + alias + ", reply=" + reply + "]";
-	}
+    public final Object payload;
+    public final int tag;
+    public final String alias;
+
+    public final boolean reply;
+
+    public RemotePodMessageDTO() {
+        super();
+        this.payload = null;
+        this.tag = 0;
+        this.alias = null;
+        this.reply = false;
+    }
+
+    public RemotePodMessageDTO(Object payload, int tag, String alias, boolean reply) {
+        super();
+        this.payload = payload;
+        this.tag = tag;
+        this.alias = alias;
+        this.reply = reply;
+    }
+
+    @Override
+    public String toString() {
+        return "RemotePodMessageDTO [payload=" + payload + ", tag=" + tag + ", alias=" + alias + ", reply=" + reply + "]";
+    }
 }

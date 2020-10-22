@@ -30,141 +30,142 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.persistence.ActorPersistenceService;
 
 public class ActorThreadPoolHandler {
-	protected final ActorSystemImpl system;
-	
-	protected final Map<UUID, Long> cellsMap;  // ActorCellID -> ThreadID
-	@Readonly
-	protected final Map<Long, ActorThread> threadsMap;
-	@Readonly
-	protected final List<Long> threadsList;
-	@Readonly
-	protected final Map<Long, String> persistenceMap;
-	
-	protected final Map<UUID, Long> groupsMap; // GroupID -> ThreadID
-	protected final Map<UUID, Integer> groupsDistributedMap; // GroupID -> ThreadIndex
-	
-	protected final ActorLoadBalancingBeforeStart actorLoadBalancingBeforeStart;
-	protected final ActorLoadBalancingAfterStart actorLoadBalancingAfterStart;
-	
-	public ActorThreadPoolHandler(ActorSystemImpl system) {
-		super();
-		
-		this.system = system;
-		
-		cellsMap = new ConcurrentHashMap<>();
-		threadsMap = new HashMap<>();
-		threadsList = new ArrayList<>();
-		persistenceMap = new HashMap<>();
-		
-		groupsMap = new ConcurrentHashMap<>();
-		groupsDistributedMap = new ConcurrentHashMap<>();
-		
-		actorLoadBalancingBeforeStart = new ActorLoadBalancingBeforeStart();
-		actorLoadBalancingAfterStart = new ActorLoadBalancingAfterStart();
-	}
-	
-	public Map<UUID, Long> getCellsMap() {
-		return cellsMap;
-	}
 
-	public Map<Long, ActorThread> getThreadsMap() {
-		return threadsMap;
-	}
-	
-	public List<Long> getThreadsList() {
-		return threadsList;
-	}
+    protected final ActorSystemImpl system;
 
-	public void beforeStart(List<ActorThread> actorThreads) {
-		actorLoadBalancingBeforeStart.registerCells(cellsMap, actorThreads, groupsMap, groupsDistributedMap, system.cells);
-		
-		int i=0;
-		for(ActorThread t : actorThreads) {
-			threadsMap.put(t.getId(), t);
-			threadsList.add(t.getId());
-			persistenceMap.put(t.getId(), ActorPersistenceService.getAlias(i));
-			i++;
-		}
-	}
-	
-	public boolean postInnerOuter(ActorMessage<?> message, UUID source) {
-		boolean result = false;
-		
-		if (system.parallelismMin==1 && system.parallelismFactor==1 && Thread.currentThread() instanceof ActorThread) {
-			ActorThread t = ((ActorThread)Thread.currentThread());
-			t.innerQueue(message.copy());
-			t.newMessage();
-			result = true;
-		}
-		else {
-			Long id_source = cellsMap.get(source);
-			Long id_dest   = cellsMap.get(message.dest);
-		
-			if (id_dest!=null) {
-				ActorThread t = threadsMap.get(id_dest);
-				
-				if (id_source!=null && id_source.equals(id_dest)
-						&& Thread.currentThread().getId()==id_source.longValue())
-					t.innerQueue(message.copy());
-				else
-					t.outerQueue(message.copy());
-				
-				t.newMessage();
-				result = true;
-			}	
-		}
-		
-		return result;
-	}
-	
-	public boolean postOuter(ActorMessage<?> message) {
-		Long id_dest = cellsMap.get(message.dest);
-		if (id_dest!=null) {
-			ActorThread t = threadsMap.get(id_dest);
-			t.outerQueue(message.copy());
-			t.newMessage();
-		}
-		
-		return id_dest!=null;
-	}
-	
-	public boolean postServer(ActorMessage<?> message) {
-		Long id_dest = cellsMap.get(message.dest);
-		if (id_dest!=null) {
-			ActorThread t = threadsMap.get(id_dest);
-			t.serverQueue(message.copy());
-			t.newMessage();
-		}
-		
-		return id_dest!=null;
-	}
-	
-	public boolean postQueue(ActorMessage<?> message, BiConsumer<ActorThread, ActorMessage<?>> biconsumer) {
-		Long id_dest = cellsMap.get(message.dest);
-		if (id_dest!=null) {
-			ActorThread t = threadsMap.get(id_dest);
-			biconsumer.accept(t, message.copy());
-			t.newMessage();
-		}
-		
-		return id_dest!=null;
-	}
-	
-	public void postPersistence(ActorMessage<?> message) {
-		Long id_source = cellsMap.get(message.source); // message.source matches original actor
-		message.dest = system.executerService.persistenceService.getService().getActorFromAlias(persistenceMap.get(id_source));
-		system.executerService.persistenceService.getService().send(message.copy());
-	}
-	
-	public void registerCell(ActorCell cell) {
-		actorLoadBalancingAfterStart.registerCell(cellsMap, threadsList, threadsMap, groupsMap, groupsDistributedMap, cell);
-	}
-	
-	public void unregisterCell(ActorCell cell) {
-		actorLoadBalancingAfterStart.unregisterCell(cellsMap, threadsMap, groupsMap, groupsDistributedMap, cell);
-	}
-	
-	public boolean isRegisteredCell(ActorCell cell) {
-		return cellsMap.containsKey(cell.getId());
-	}
+    protected final Map<UUID, Long> cellsMap;  // ActorCellID -> ThreadID
+    @Readonly
+    protected final Map<Long, ActorThread> threadsMap;
+    @Readonly
+    protected final List<Long> threadsList;
+    @Readonly
+    protected final Map<Long, String> persistenceMap;
+
+    protected final Map<UUID, Long> groupsMap; // GroupID -> ThreadID
+    protected final Map<UUID, Integer> groupsDistributedMap; // GroupID -> ThreadIndex
+
+    protected final ActorLoadBalancingBeforeStart actorLoadBalancingBeforeStart;
+    protected final ActorLoadBalancingAfterStart actorLoadBalancingAfterStart;
+
+    public ActorThreadPoolHandler(ActorSystemImpl system) {
+        super();
+
+        this.system = system;
+
+        cellsMap = new ConcurrentHashMap<>();
+        threadsMap = new HashMap<>();
+        threadsList = new ArrayList<>();
+        persistenceMap = new HashMap<>();
+
+        groupsMap = new ConcurrentHashMap<>();
+        groupsDistributedMap = new ConcurrentHashMap<>();
+
+        actorLoadBalancingBeforeStart = new ActorLoadBalancingBeforeStart();
+        actorLoadBalancingAfterStart = new ActorLoadBalancingAfterStart();
+    }
+
+    public Map<UUID, Long> getCellsMap() {
+        return cellsMap;
+    }
+
+    public Map<Long, ActorThread> getThreadsMap() {
+        return threadsMap;
+    }
+
+    public List<Long> getThreadsList() {
+        return threadsList;
+    }
+
+    public void beforeStart(List<ActorThread> actorThreads) {
+        actorLoadBalancingBeforeStart.registerCells(cellsMap, actorThreads, groupsMap, groupsDistributedMap, system.cells);
+
+        int i = 0;
+        for (ActorThread t : actorThreads) {
+            threadsMap.put(t.getId(), t);
+            threadsList.add(t.getId());
+            persistenceMap.put(t.getId(), ActorPersistenceService.getAlias(i));
+            i++;
+        }
+    }
+
+    public boolean postInnerOuter(ActorMessage<?> message, UUID source) {
+        boolean result = false;
+
+        if (system.parallelismMin == 1 && system.parallelismFactor == 1 && Thread.currentThread() instanceof ActorThread) {
+            ActorThread t = ((ActorThread) Thread.currentThread());
+            t.innerQueue(message.copy());
+            t.newMessage();
+            result = true;
+        } else {
+            Long id_source = cellsMap.get(source);
+            Long id_dest = cellsMap.get(message.dest);
+
+            if (id_dest != null) {
+                ActorThread t = threadsMap.get(id_dest);
+
+                if (id_source != null && id_source.equals(id_dest)
+                        && Thread.currentThread().getId() == id_source.longValue()) {
+                    t.innerQueue(message.copy());
+                } else {
+                    t.outerQueue(message.copy());
+                }
+
+                t.newMessage();
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    public boolean postOuter(ActorMessage<?> message) {
+        Long id_dest = cellsMap.get(message.dest);
+        if (id_dest != null) {
+            ActorThread t = threadsMap.get(id_dest);
+            t.outerQueue(message.copy());
+            t.newMessage();
+        }
+
+        return id_dest != null;
+    }
+
+    public boolean postServer(ActorMessage<?> message) {
+        Long id_dest = cellsMap.get(message.dest);
+        if (id_dest != null) {
+            ActorThread t = threadsMap.get(id_dest);
+            t.serverQueue(message.copy());
+            t.newMessage();
+        }
+
+        return id_dest != null;
+    }
+
+    public boolean postQueue(ActorMessage<?> message, BiConsumer<ActorThread, ActorMessage<?>> biconsumer) {
+        Long id_dest = cellsMap.get(message.dest);
+        if (id_dest != null) {
+            ActorThread t = threadsMap.get(id_dest);
+            biconsumer.accept(t, message.copy());
+            t.newMessage();
+        }
+
+        return id_dest != null;
+    }
+
+    public void postPersistence(ActorMessage<?> message) {
+        Long id_source = cellsMap.get(message.source); // message.source matches original actor
+        message.dest = system.executerService.persistenceService.getService().getActorFromAlias(persistenceMap.get(id_source));
+        system.executerService.persistenceService.getService().send(message.copy());
+    }
+
+    public void registerCell(ActorCell cell) {
+        actorLoadBalancingAfterStart.registerCell(cellsMap, threadsList, threadsMap, groupsMap, groupsDistributedMap, cell);
+    }
+
+    public void unregisterCell(ActorCell cell) {
+        actorLoadBalancingAfterStart.unregisterCell(cellsMap, threadsMap, groupsMap, groupsDistributedMap, cell);
+    }
+
+    public boolean isRegisteredCell(ActorCell cell) {
+        return cellsMap.containsKey(cell.getId());
+    }
 }

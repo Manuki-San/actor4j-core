@@ -22,21 +22,29 @@ import java.util.concurrent.PriorityBlockingQueue;
 import org.jctools.queues.MpscLinkedQueue;
 
 public class UnboundedActorThread extends DefaultActorThread {
-	public UnboundedActorThread(ThreadGroup group, String name, ActorSystemImpl system) {
-		super(group, name, system);
-	}
 
-	@Override
-	public void configQueues() {
-		directiveQueue = new MpscLinkedQueue<>(); /* unbounded */
-		priorityQueue  = new PriorityBlockingQueue<>(system.getQueueSize()); /* unbounded */
-		
-		serverQueueL2  = new MpscLinkedQueue<>(); /* unbounded */
-		serverQueueL1  = new ArrayDeque<>(system.getBufferQueueSize()); /* unbounded */
-		
-		outerQueueL2   = new MpscLinkedQueue<>(); /* unbounded */
-		outerQueueL1   = new ArrayDeque<>(system.getBufferQueueSize()); /* unbounded */
-		
-		innerQueue     = new LinkedList<>(); /* unbounded */
-	}
+    public UnboundedActorThread(ThreadGroup group, String name, ActorSystemImpl system) {
+        super(group, name, system);
+    }
+
+    @Override
+    public void configQueues() {
+        directiveQueue = new MpscLinkedQueue<>();
+        /* unbounded */
+        priorityQueue = new PriorityBlockingQueue<>(system.getQueueSize());
+        /* unbounded */
+
+        serverQueueL2 = new MpscLinkedQueue<>();
+        /* unbounded */
+        serverQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
+        /* unbounded */
+
+        outerQueueL2 = new MpscLinkedQueue<>();
+        /* unbounded */
+        outerQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
+        /* unbounded */
+
+        innerQueue = new LinkedList<>();
+        /* unbounded */
+    }
 }

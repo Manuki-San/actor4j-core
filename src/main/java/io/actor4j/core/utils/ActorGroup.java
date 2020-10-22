@@ -19,5 +19,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface ActorGroup extends Collection<UUID> {
-	public UUID getId();		
+
+    public UUID getId();
 }

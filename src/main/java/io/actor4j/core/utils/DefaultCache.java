@@ -19,45 +19,46 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DefaultCache<K, E> implements Cache<K, E> {
-	protected Map<K, E> map;
-	
-	public DefaultCache() {
-		map = new HashMap<>();
-	}
-	
-	public Map<K, E> getMap() {
-		return map;
-	}
 
-	@Override
-	public E get(K key) {
-		return map.get(key);
-	}
-	
-	@Override
-	public E put(K key, E value) {
-		return map.put(key, value);
-	}
-	
-	public void remove(K key) {
-		map.remove(key);
-	}
-	
-	public void clear() {
-		map.clear();
-	}
-	
-	protected void resize() {
-		// empty
-	}
-	
-	@Override
-	public void gc(long maxTime) {
-		// empty
-	}
+    protected Map<K, E> map;
 
-	@Override
-	public String toString() {
-		return "DefaultCache [map=" + map + "]";
-	}
+    public DefaultCache() {
+        map = new HashMap<>();
+    }
+
+    public Map<K, E> getMap() {
+        return map;
+    }
+
+    @Override
+    public E get(K key) {
+        return map.get(key);
+    }
+
+    @Override
+    public E put(K key, E value) {
+        return map.put(key, value);
+    }
+
+    public void remove(K key) {
+        map.remove(key);
+    }
+
+    public void clear() {
+        map.clear();
+    }
+
+    protected void resize() {
+        // empty
+    }
+
+    @Override
+    public void gc(long maxTime) {
+        // empty
+    }
+
+    @Override
+    public String toString() {
+        return "DefaultCache [map=" + map + "]";
+    }
 }

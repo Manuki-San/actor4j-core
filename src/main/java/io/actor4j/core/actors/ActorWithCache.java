@@ -22,36 +22,38 @@ import io.actor4j.core.utils.CacheLRUWithGC;
 import static io.actor4j.core.utils.ActorUtils.*;
 
 public class ActorWithCache<K, V> extends Actor {
-	protected int cacheSize;
-	protected Cache<K, V> cache;
-	
-	public static final int GC      = checkTag(300);
-	public static final int EVICT   = GC;
-	public static final int GET     = checkTag(301);
-	public static final int SET     = checkTag(302);
-	public static final int UPDATE  = checkTag(303);
-	public static final int DEL     = checkTag(304);
-	public static final int DEL_ALL = checkTag(305);
-	public static final int CLEAR   = checkTag(306);
-	public static final int CAS     = checkTag(307); // CompareAndSet
-	public static final int CAU     = checkTag(308); // CompareAndUpdate
-	
-	public static final int SUBSCRIBE_SECONDARY = checkTag(309);
-	
-	public ActorWithCache(String name, int cacheSize) {
-		super(name);
-		
-		this.cacheSize = cacheSize;
-		cache = new CacheLRUWithGC<>(cacheSize);
-	}
-	
-	public ActorWithCache(int cacheSize) {
-		this(null, cacheSize);
-	}
-	
-	@Override
-	public void receive(ActorMessage<?> message) {
-		if (message.value!=null && message.tag==GC)
-			cache.gc(message.valueAsLong());
-	}
+
+    protected int cacheSize;
+    protected Cache<K, V> cache;
+
+    public static final int GC = checkTag(300);
+    public static final int EVICT = GC;
+    public static final int GET = checkTag(301);
+    public static final int SET = checkTag(302);
+    public static final int UPDATE = checkTag(303);
+    public static final int DEL = checkTag(304);
+    public static final int DEL_ALL = checkTag(305);
+    public static final int CLEAR = checkTag(306);
+    public static final int CAS = checkTag(307); // CompareAndSet
+    public static final int CAU = checkTag(308); // CompareAndUpdate
+
+    public static final int SUBSCRIBE_SECONDARY = checkTag(309);
+
+    public ActorWithCache(String name, int cacheSize) {
+        super(name);
+
+        this.cacheSize = cacheSize;
+        cache = new CacheLRUWithGC<>(cacheSize);
+    }
+
+    public ActorWithCache(int cacheSize) {
+        this(null, cacheSize);
+    }
+
+    @Override
+    public void receive(ActorMessage<?> message) {
+        if (message.value != null && message.tag == GC) {
+            cache.gc(message.valueAsLong());
+        }
+    }
 }

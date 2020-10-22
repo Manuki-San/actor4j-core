@@ -18,5 +18,6 @@ package io.actor4j.core.pods;
 import io.actor4j.core.messages.ActorMessage;
 
 public interface Shard {
-	public String shardId(ActorMessage<?> message, int totalShardCount);
+
+    public String shardId(ActorMessage<?> message, int totalShardCount);
 }

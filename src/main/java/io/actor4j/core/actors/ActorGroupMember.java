@@ -17,6 +17,17 @@ package io.actor4j.core.actors;
 
 import java.util.UUID;
 
+/**
+ * Member of an actor's group
+ *
+ * @see ActorWithGroup
+ */
 public interface ActorGroupMember {
-	public UUID getGroupId();
+
+    /**
+     * Get the group which the actor is a member of
+     *
+     * @return the ID of the group
+     */
+    public UUID getGroupId();
 }

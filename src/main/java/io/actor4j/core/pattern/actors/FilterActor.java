@@ -22,11 +22,12 @@ import io.actor4j.core.actors.Actor;
 import io.actor4j.core.messages.ActorMessage;
 
 public class FilterActor extends PipeActor {
-	public FilterActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> filter, UUID next) {
-		super(filter, next);
-	}
-	
-	public FilterActor(String name, BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> filter, UUID next) {
-		super(name, filter, next);
-	}
+
+    public FilterActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> filter, UUID next) {
+        super(filter, next);
+    }
+
+    public FilterActor(String name, BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> filter, UUID next) {
+        super(name, filter, next);
+    }
 }

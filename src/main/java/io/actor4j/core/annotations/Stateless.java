@@ -21,7 +21,10 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
-@Target(value=TYPE)
-@Retention(value=RUNTIME)
+/**
+ * Stateless actors can be executed in parallel
+  */
+@Target(value = TYPE)
+@Retention(value = RUNTIME)
 public @interface Stateless {
 }

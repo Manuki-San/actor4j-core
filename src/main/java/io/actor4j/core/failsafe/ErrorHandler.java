@@ -33,5 +33,6 @@ package io.actor4j.core.failsafe;
 import java.util.UUID;
 
 public interface ErrorHandler {
-	public void handle(Throwable t, String message, UUID uuid);
+
+    public void handle(Throwable t, String message, UUID uuid);
 }

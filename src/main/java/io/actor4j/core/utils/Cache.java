@@ -16,10 +16,14 @@
 package io.actor4j.core.utils;
 
 public interface Cache<K, V> {
-	public V get(K key);
-	public V put(K key, V value);
-	public void remove(K key);
-	public void clear();
-	
-	public void gc(long maxTime);
+
+    public V get(K key);
+
+    public V put(K key, V value);
+
+    public void remove(K key);
+
+    public void clear();
+
+    public void gc(long maxTime);
 }

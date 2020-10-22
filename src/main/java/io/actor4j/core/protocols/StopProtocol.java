@@ -29,45 +29,48 @@ import io.actor4j.core.ActorCell;
 import io.actor4j.core.messages.ActorMessage;
 
 public class StopProtocol {
-	protected final ActorCell cell;
 
-	public StopProtocol(ActorCell cell) {
-		this.cell = cell;
-	}
-	
-	protected void postStop() {
-		cell.postStop();
-		cell.internal_stop();
-		systemLogger().info(String.format("[LIFECYCLE] actor (%s) stopped", actorLabel(cell.getActor())));
-	}
-	
-	public void apply() {
-		final List<UUID> waitForChildren =new ArrayList<>(cell.getChildren().size());
-		
-		Iterator<UUID> iterator = cell.getChildren().iterator();
-		while (iterator.hasNext()) {
-			UUID dest = iterator.next();
-			cell.watch(dest);
-		}
-		iterator = cell.getChildren().iterator();
-		while (iterator.hasNext()) {
-			UUID dest = iterator.next();
-			waitForChildren.add(dest);
-			cell.getSystem().sendAsDirective(new ActorMessage<>(null, INTERNAL_STOP, cell.getId(), dest));
-		}
-		
-		if (waitForChildren.isEmpty()) 
-			postStop();
-		else
-			cell.become(new Consumer<ActorMessage<?>>() {
-				@Override
-				public void accept(ActorMessage<?> message) {
-					if (message.tag==INTERNAL_STOP_SUCCESS) {
-						waitForChildren.remove(message.source);
-						if (waitForChildren.isEmpty())
-							postStop();
-					}
-				}
-			});
-	}
+    protected final ActorCell cell;
+
+    public StopProtocol(ActorCell cell) {
+        this.cell = cell;
+    }
+
+    protected void postStop() {
+        cell.postStop();
+        cell.internal_stop();
+        systemLogger().info(String.format("[LIFECYCLE] actor (%s) stopped", actorLabel(cell.getActor())));
+    }
+
+    public void apply() {
+        final List<UUID> waitForChildren = new ArrayList<>(cell.getChildren().size());
+
+        Iterator<UUID> iterator = cell.getChildren().iterator();
+        while (iterator.hasNext()) {
+            UUID dest = iterator.next();
+            cell.watch(dest);
+        }
+        iterator = cell.getChildren().iterator();
+        while (iterator.hasNext()) {
+            UUID dest = iterator.next();
+            waitForChildren.add(dest);
+            cell.getSystem().sendAsDirective(new ActorMessage<>(null, INTERNAL_STOP, cell.getId(), dest));
+        }
+
+        if (waitForChildren.isEmpty()) {
+            postStop();
+        } else {
+            cell.become(new Consumer<ActorMessage<?>>() {
+                @Override
+                public void accept(ActorMessage<?> message) {
+                    if (message.tag == INTERNAL_STOP_SUCCESS) {
+                        waitForChildren.remove(message.source);
+                        if (waitForChildren.isEmpty()) {
+                            postStop();
+                        }
+                    }
+                }
+            });
+        }
+    }
 }

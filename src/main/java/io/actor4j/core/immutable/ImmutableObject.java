@@ -20,19 +20,22 @@ import io.actor4j.core.utils.Copyable;
 import io.actor4j.core.utils.Shareable;
 
 public class ImmutableObject<T> implements Shareable {
-	protected final T value;
-	
-	public ImmutableObject(T value) {
-		super();
-		
-		if (value!=null)
-			if (!(ActorMessage.isSupportedType(value.getClass()) || value instanceof Shareable || value instanceof Copyable || value instanceof Exception))
-				throw new IllegalArgumentException();
-		
-		this.value = value;
-	}
-	
-	public T get() {
-		return value;
-	}
+
+    protected final T value;
+
+    public ImmutableObject(T value) {
+        super();
+
+        if (value != null) {
+            if (!(ActorMessage.isSupportedType(value.getClass()) || value instanceof Shareable || value instanceof Copyable || value instanceof Exception)) {
+                throw new IllegalArgumentException();
+            }
+        }
+
+        this.value = value;
+    }
+
+    public T get() {
+        return value;
+    }
 }

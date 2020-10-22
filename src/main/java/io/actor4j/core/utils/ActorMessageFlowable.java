@@ -24,25 +24,27 @@ import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 
 public class ActorMessageFlowable {
-	public static Flowable<ActorMessage<?>> getMessages(final Queue<ActorMessage<?>> stash) {
-		return Flowable.create(new FlowableOnSubscribe<ActorMessage<?>>() {
-			@Override
-			public void subscribe(FlowableEmitter<ActorMessage<?>> emitter) throws Exception {
-				try {
-					ActorMessage<?> message;
-					for (int i=0; !emitter.isCancelled() && i<emitter.requested() && (message=stash.poll())!=null; i++) 
-						emitter.onNext(message);
-					
-					if (emitter.isCancelled())
-						return;
-					else
-						emitter.onComplete();;
-				}
-				catch (Exception e) {
-					emitter.onError(e);
-				}
-			}
-			
-		}, BackpressureStrategy.BUFFER);
-	}
+
+    public static Flowable<ActorMessage<?>> getMessages(final Queue<ActorMessage<?>> stash) {
+        return Flowable.create(new FlowableOnSubscribe<ActorMessage<?>>() {
+            @Override
+            public void subscribe(FlowableEmitter<ActorMessage<?>> emitter) throws Exception {
+                try {
+                    ActorMessage<?> message;
+                    for (int i = 0; !emitter.isCancelled() && i < emitter.requested() && (message = stash.poll()) != null; i++) {
+                        emitter.onNext(message);
+                    }
+
+                    if (emitter.isCancelled()) {
+                        return;
+                    } else {
+                        emitter.onComplete();
+                    };
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            }
+
+        }, BackpressureStrategy.BUFFER);
+    }
 }

@@ -20,24 +20,25 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ConcurrentActorGroup extends ConcurrentLinkedQueue<UUID> implements ActorGroup {
-	protected static final long serialVersionUID = 1L;
-	
-	protected final UUID id;
 
-	public ConcurrentActorGroup() {
-		super();
+    protected static final long serialVersionUID = 1L;
 
-		id = UUID.randomUUID();
-	}
+    protected final UUID id;
 
-	public ConcurrentActorGroup(Collection<? extends UUID> c) {
-		super(c);
+    public ConcurrentActorGroup() {
+        super();
 
-		id = UUID.randomUUID();
-	}
+        id = UUID.randomUUID();
+    }
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
+    public ConcurrentActorGroup(Collection<? extends UUID> c) {
+        super(c);
+
+        id = UUID.randomUUID();
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
 }

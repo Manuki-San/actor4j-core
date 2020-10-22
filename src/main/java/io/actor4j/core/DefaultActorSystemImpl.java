@@ -18,29 +18,31 @@ package io.actor4j.core;
 import java.util.List;
 
 public class DefaultActorSystemImpl extends ActorSystemImpl {
-	public DefaultActorSystemImpl(ActorSystem wrapper) {
-		this(null, wrapper);
-	}
 
-	public DefaultActorSystemImpl(String name, ActorSystem wrapper) {
-		super(name, wrapper);
-		
-		messageDispatcher = new DefaultActorMessageDispatcher(this);
-		setActorThreadClass(true);
-	}
-	
-	public void setActorThreadClass(boolean unbounded) {
-		if (unbounded)
-			actorThreadClass  = UnboundedActorThread.class;
-		else
-			actorThreadClass  = BoundedActorThread.class;
-	}
-	
-	public List<Integer> getWorkerInnerQueueSizes() {
-		return executerService.actorThreadPool.getWorkerInnerQueueSizes();
-	}
-	
-	public List<Integer> getWorkerOuterQueueSizes() {
-		return executerService.actorThreadPool.getWorkerOuterQueueSizes();
-	}
+    public DefaultActorSystemImpl(ActorSystem wrapper) {
+        this(null, wrapper);
+    }
+
+    public DefaultActorSystemImpl(String name, ActorSystem wrapper) {
+        super(name, wrapper);
+
+        messageDispatcher = new DefaultActorMessageDispatcher(this);
+        setActorThreadClass(true);
+    }
+
+    public void setActorThreadClass(boolean unbounded) {
+        if (unbounded) {
+            actorThreadClass = UnboundedActorThread.class;
+        } else {
+            actorThreadClass = BoundedActorThread.class;
+        }
+    }
+
+    public List<Integer> getWorkerInnerQueueSizes() {
+        return executerService.actorThreadPool.getWorkerInnerQueueSizes();
+    }
+
+    public List<Integer> getWorkerOuterQueueSizes() {
+        return executerService.actorThreadPool.getWorkerOuterQueueSizes();
+    }
 }

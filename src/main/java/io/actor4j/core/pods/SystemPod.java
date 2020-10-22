@@ -16,7 +16,8 @@
 package io.actor4j.core.pods;
 
 public abstract class SystemPod extends Pod {
-	public SystemPod() {
-		super();
-	}
+
+    public SystemPod() {
+        super();
+    }
 }

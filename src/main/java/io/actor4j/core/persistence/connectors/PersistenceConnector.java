@@ -18,19 +18,20 @@ package io.actor4j.core.persistence.connectors;
 import io.actor4j.core.ActorSystem;
 
 public abstract class PersistenceConnector {
-	protected String host;
-	protected int port; 
-	protected String databaseName;
-	
-	public PersistenceConnector(String host, int port, String databaseName) {
-		this.host = host;
-		this.port = port;
-		this.databaseName = databaseName;
-	}
-	
-	public abstract void open();
-	public abstract void close();
-	
-	
-	public abstract PersistenceAdapter createAdapter(ActorSystem parent);
+
+    protected String host;
+    protected int port;
+    protected String databaseName;
+
+    public PersistenceConnector(String host, int port, String databaseName) {
+        this.host = host;
+        this.port = port;
+        this.databaseName = databaseName;
+    }
+
+    public abstract void open();
+
+    public abstract void close();
+
+    public abstract PersistenceAdapter createAdapter(ActorSystem parent);
 }

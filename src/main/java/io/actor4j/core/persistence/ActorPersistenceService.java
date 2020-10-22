@@ -23,40 +23,41 @@ import io.actor4j.core.persistence.actor.PersistenceServiceActor;
 import io.actor4j.core.persistence.connectors.PersistenceConnector;
 
 public class ActorPersistenceService {
-	protected ActorService service;
-	protected PersistenceConnector connector;
-	
-	public ActorPersistenceService(ActorSystem parent, int parallelismMin, int parallelismFactor, PersistenceConnector connector) {
-		super();
-		
-		this.connector = connector;
 
-		service = new ActorService("actor4j-persistence");
-		service.setParallelismMin(parallelismMin);
-		service.setParallelismFactor(parallelismFactor);
-		
-		connector.open();
-		for (int i=0; i<parallelismMin*parallelismFactor; i++) {
-			String alias = getAlias(i);
-			UUID id = service.addActor(() -> new PersistenceServiceActor(alias, connector.createAdapter(parent)));
-			service.setAlias(id, alias);
-		}
-	}
-	
-	public static String getAlias(int index) {
-		return "persistence-actor-"+String.valueOf(index);
-	}
-	
-	public ActorService getService() {
-		return service;
-	}
+    protected ActorService service;
+    protected PersistenceConnector connector;
 
-	public void start() {
-		service.start();
-	}
-	
-	public void shutdown() {
-		service.shutdownWithActors(true);
-		connector.close();
-	}
+    public ActorPersistenceService(ActorSystem parent, int parallelismMin, int parallelismFactor, PersistenceConnector connector) {
+        super();
+
+        this.connector = connector;
+
+        service = new ActorService("actor4j-persistence");
+        service.setParallelismMin(parallelismMin);
+        service.setParallelismFactor(parallelismFactor);
+
+        connector.open();
+        for (int i = 0; i < parallelismMin * parallelismFactor; i++) {
+            String alias = getAlias(i);
+            UUID id = service.addActor(() -> new PersistenceServiceActor(alias, connector.createAdapter(parent)));
+            service.setAlias(id, alias);
+        }
+    }
+
+    public static String getAlias(int index) {
+        return "persistence-actor-" + String.valueOf(index);
+    }
+
+    public ActorService getService() {
+        return service;
+    }
+
+    public void start() {
+        service.start();
+    }
+
+    public void shutdown() {
+        service.shutdownWithActors(true);
+        connector.close();
+    }
 }
