@@ -21,6 +21,11 @@ import java.util.concurrent.CompletableFuture;
 import io.actor4j.core.utils.Copyable;
 import io.actor4j.core.utils.Shareable;
 
+/**
+ * A FutureActorMessage is an {@link ActorMessage} with a {@link CompletableFuture}
+ * 
+ * @param <T> type of the message payload
+ */
 public class FutureActorMessage<T> extends ActorMessage<T> {
 
     public final CompletableFuture<T> future;

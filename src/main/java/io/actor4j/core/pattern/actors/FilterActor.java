@@ -21,6 +21,9 @@ import java.util.function.BiFunction;
 import io.actor4j.core.actors.Actor;
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * A FilterActor is a {@link PipeActor}
+ */
 public class FilterActor extends PipeActor {
 
     public FilterActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> filter, UUID next) {

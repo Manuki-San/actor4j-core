@@ -22,28 +22,32 @@ import io.actor4j.core.actors.Actor;
 import io.actor4j.core.actors.ActorGroupMember;
 import io.actor4j.core.pods.PodContext;
 
+/**
+ * A PodActor is an {@link Actor} 
+ */
 public abstract class PodActor extends Actor implements ActorGroupMember {
-	protected final UUID groupId;
-	
-	public PodActor() {
-		super();
-		
-		this.groupId = UUID.randomUUID();
-	}
-	
-	@Override
-	public UUID getGroupId() {
-		return groupId;
-	}
-	
-	@Override
-	public void preStart() {
-		register();
-	}
-	
-	public PodContext getContext() {
-		return ((PodActorCell)cell).getContext();
-	}
-	
-	public abstract void register();
+
+    protected final UUID groupId;
+
+    public PodActor() {
+        super();
+
+        this.groupId = UUID.randomUUID();
+    }
+
+    @Override
+    public UUID getGroupId() {
+        return groupId;
+    }
+
+    @Override
+    public void preStart() {
+        register();
+    }
+
+    public PodContext getContext() {
+        return ((PodActorCell) cell).getContext();
+    }
+
+    public abstract void register();
 }

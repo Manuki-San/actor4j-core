@@ -31,17 +31,31 @@ import io.actor4j.core.immutable.ImmutableList;
 import io.actor4j.core.immutable.ImmutableObject;
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * A ServiceDiscoveryActor is an {@link Actor} maintaining a registry of {@link Service}
+ * The client can send messages with the following tags:
+ * - PUBLISH_SERVICE
+ * - UNPUBLISH_SERVICE
+ * - LOOKUP_SERVICES
+ * - LOOKUP_SERVICE
+ */
 public class ServiceDiscoveryActor extends Actor {
 
+    /**
+     * Map of services, indexed by service ID
+     */
     protected Map<UUID, Service> services;
+    /**
+     * Map of topics
+     */
     protected Map<String, Set<UUID>> topicsMap;
 
     protected String alias;
 
-    public static final int PUBLISH_SERVICE = checkTag(400);
+    public static final int PUBLISH_SERVICE   = checkTag(400);
     public static final int UNPUBLISH_SERVICE = checkTag(401);
-    public static final int LOOKUP_SERVICES = checkTag(402);
-    public static final int LOOKUP_SERVICE = checkTag(403);
+    public static final int LOOKUP_SERVICES   = checkTag(402);
+    public static final int LOOKUP_SERVICE    = checkTag(403);
 
     public ServiceDiscoveryActor(String alias) {
         this.alias = alias;

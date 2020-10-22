@@ -15,6 +15,9 @@
  */
 package io.actor4j.core.pods;
 
+/**
+ * A SystemPod is a {@link Pod}
+ */
 public abstract class SystemPod extends Pod {
 
     public SystemPod() {

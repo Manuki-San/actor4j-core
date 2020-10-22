@@ -25,7 +25,7 @@ import java.util.UUID;
 public interface ActorGroupMember {
 
     /**
-     * Get the group which the actor is a member of
+     * Gets the group which the actor is a member of
      *
      * @return the ID of the group
      */

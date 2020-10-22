@@ -20,47 +20,37 @@ import org.junit.runner.RunWith;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	ActorFeature.class,
-	LifeCycleFeature.class,
-	BehaviourFeature.class,
-	AwaitFeature.class,
-	MatcherFeature.class,
-	FailsafeFeature.class,
-	/*UnhandledFeature.class,*/
-	
-	EmbeddedActorFeature.class,
-	PseudoActorFeature.class,
-	ConcurrentPseudoActorFeature.class,
-	StatelessActorFeature.class,
-	PrimarySecondaryActorFeature.class,
-	ResourceActorFeature.class,
-	
-	PersistenceFeature.class,
-	ActorGroupMemberFeature.class,
-	CacheFeature.class,
-	
-	ServiceDiscoveyFeature.class,
-	
-	CommPatternFeature.class,
-	FuturePatternFeature.class,
-	OptionalFeature.class,
-	
-	/*----------------------------*/
-	
-	XActorFeature.class,
-	XAwaitFeature.class,
-	XFailsafeFeature.class,
-	
-	XPseudoActorFeature.class,
-	XStatelessActorFeature.class,
-	XPrimarySecondaryActorFeature.class,
-	XResourceActorFeature.class,
-	
-	XActorGroupMemberFeature.class,
-	
-	/*----------------------------*/
-	
-	PodFeature.class
+    ActorFeature.class,
+    LifeCycleFeature.class,
+    BehaviourFeature.class,
+    AwaitFeature.class,
+    MatcherFeature.class,
+    FailsafeFeature.class,
+    /*UnhandledFeature.class,*/
+    EmbeddedActorFeature.class,
+    PseudoActorFeature.class,
+    ConcurrentPseudoActorFeature.class,
+    StatelessActorFeature.class,
+    PrimarySecondaryActorFeature.class,
+    ResourceActorFeature.class,
+    PersistenceFeature.class,
+    ActorGroupMemberFeature.class,
+    CacheFeature.class,
+    ServiceDiscoveyFeature.class,
+    CommPatternFeature.class,
+    FuturePatternFeature.class,
+    OptionalFeature.class,
+    /*----------------------------*/
+    XActorFeature.class,
+    XAwaitFeature.class,
+    XFailsafeFeature.class,
+    XPseudoActorFeature.class,
+    XStatelessActorFeature.class,
+    XPrimarySecondaryActorFeature.class,
+    XResourceActorFeature.class,
+    XActorGroupMemberFeature.class,
+    /*----------------------------*/
+    PodFeature.class
 })
 public class AllFeaturesTest {
 

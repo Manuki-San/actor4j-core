@@ -30,6 +30,9 @@ import org.jctools.queues.MpscLinkedQueue;
 
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * An XActorThread is an {@link ActorThread}
+ */
 public class XActorThread extends ActorThread {
 
     protected final Queue<ActorMessage<?>> directiveQueue;

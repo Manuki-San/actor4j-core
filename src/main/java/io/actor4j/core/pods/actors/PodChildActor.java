@@ -22,38 +22,41 @@ import io.actor4j.core.actors.ActorGroupMember;
 import io.actor4j.core.pods.PodContext;
 
 public abstract class PodChildActor extends Actor implements ActorGroupMember {
-	protected UUID groupId;
-	protected PodContext context;
 
-	public PodChildActor(UUID groupId, PodContext context) {
-		super();
-		this.groupId = groupId;
-		this.context = context;
-	}
+    protected UUID groupId;
+    protected PodContext context;
 
-	@Override
-	public UUID getGroupId() {
-		return groupId;
-	}
-	
-	@Override
-	public void setAlias(String alias) {
-		setAlias(alias, true);
-	}
-	
-	public void setAlias(String alias, boolean absolute) {
-		if (alias!=null && !alias.isEmpty())
-			if (absolute)
-				super.setAlias(alias+groupId);
-			else
-				super.setAlias(alias);
-	}
-	
-	public String getAbsoluteAlias(String alias) {
-		return alias+groupId;
-	}
-	
-	public <T> T getPodDatabase() {
-		return getSystem().getPodDatabase();
-	}
+    public PodChildActor(UUID groupId, PodContext context) {
+        super();
+        this.groupId = groupId;
+        this.context = context;
+    }
+
+    @Override
+    public UUID getGroupId() {
+        return groupId;
+    }
+
+    @Override
+    public void setAlias(String alias) {
+        setAlias(alias, true);
+    }
+
+    public void setAlias(String alias, boolean absolute) {
+        if (alias != null && !alias.isEmpty()) {
+            if (absolute) {
+                super.setAlias(alias + groupId);
+            } else {
+                super.setAlias(alias);
+            }
+        }
+    }
+
+    public String getAbsoluteAlias(String alias) {
+        return alias + groupId;
+    }
+
+    public <T> T getPodDatabase() {
+        return getSystem().getPodDatabase();
+    }
 }

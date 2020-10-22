@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.actor4j.core.pods.actors;
 
 import java.util.HashMap;
@@ -26,47 +25,50 @@ import io.actor4j.core.pods.PodContext;
 import io.actor4j.core.pods.RemotePodMessage;
 
 public abstract class RemoteHandlerPodActor extends HandlerPodActor {
-	public static BiConsumer<String, Object> internal_server_callback;
-	
-	protected Map<UUID, RemotePodMessage> remoteMap;
 
-	public RemoteHandlerPodActor(String alias, UUID groupId, PodContext context) {
-		super(alias, groupId, context);
-		
-		this.remoteMap = new HashMap<>();
-	}
-	
-	@Override
-	public void receive(ActorMessage<?> message) {
-		if (message.value!=null) {
-			RemotePodMessage remoteMessage = null;
-			if (message.interaction!=null)
-				remoteMessage = remoteMap.get(message.interaction);
-				
-			if (remoteMessage!=null || message.value instanceof RemotePodMessage) {
-				if (remoteMessage!=null) {
-					remoteMap.remove(message.interaction);
-					internal_callback(message, remoteMessage);
-				}
-				else {
-					UUID interaction = UUID.randomUUID();
-					remoteMap.put(interaction, (RemotePodMessage)message.value); 
-					handle((RemotePodMessage)message.value, interaction);
-				}
-			}
-			else
-				super.receive(message);
-		}
-		else
-			unhandled(message);
-	}
-	
-	protected void internal_callback(ActorMessage<?> message, RemotePodMessage remoteMessage) {
-		Object result = callback(message, remoteMessage);
-		if (remoteMessage.remotePodMessageDTO.reply && internal_server_callback!=null)
-			internal_server_callback.accept(remoteMessage.replyAddress, result);
-	}
+    public static BiConsumer<String, Object> internal_server_callback;
 
-	public abstract void handle(RemotePodMessage remoteMessage, UUID interaction);
-	public abstract Object callback(ActorMessage<?> message, RemotePodMessage remoteMessage);
+    protected Map<UUID, RemotePodMessage> remoteMap;
+
+    public RemoteHandlerPodActor(String alias, UUID groupId, PodContext context) {
+        super(alias, groupId, context);
+
+        this.remoteMap = new HashMap<>();
+    }
+
+    @Override
+    public void receive(ActorMessage<?> message) {
+        if (message.value != null) {
+            RemotePodMessage remoteMessage = null;
+            if (message.interaction != null) {
+                remoteMessage = remoteMap.get(message.interaction);
+            }
+
+            if (remoteMessage != null || message.value instanceof RemotePodMessage) {
+                if (remoteMessage != null) {
+                    remoteMap.remove(message.interaction);
+                    internal_callback(message, remoteMessage);
+                } else {
+                    UUID interaction = UUID.randomUUID();
+                    remoteMap.put(interaction, (RemotePodMessage) message.value);
+                    handle((RemotePodMessage) message.value, interaction);
+                }
+            } else {
+                super.receive(message);
+            }
+        } else {
+            unhandled(message);
+        }
+    }
+
+    protected void internal_callback(ActorMessage<?> message, RemotePodMessage remoteMessage) {
+        Object result = callback(message, remoteMessage);
+        if (remoteMessage.remotePodMessageDTO.reply && internal_server_callback != null) {
+            internal_server_callback.accept(remoteMessage.replyAddress, result);
+        }
+    }
+
+    public abstract void handle(RemotePodMessage remoteMessage, UUID interaction);
+
+    public abstract Object callback(ActorMessage<?> message, RemotePodMessage remoteMessage);
 }

@@ -20,6 +20,10 @@ import java.util.List;
 
 import io.actor4j.core.utils.Shareable;
 
+/**
+ * A {@link Shareable} immutable {@link List}
+ * @param <T> 
+ */
 public class ImmutableList<T> implements Shareable {
 
     /**
@@ -37,7 +41,7 @@ public class ImmutableList<T> implements Shareable {
     }
 
     /**
-     * Get the list
+     * Gets the immutable list
      * @return the list
      */
     public List<T> get() {

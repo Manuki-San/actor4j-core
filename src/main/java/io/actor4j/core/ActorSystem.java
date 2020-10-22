@@ -29,30 +29,56 @@ import io.actor4j.core.pods.PodFactory;
 import io.actor4j.core.utils.ActorFactory;
 import io.actor4j.core.utils.ActorGroup;
 
+/**
+ * An ActorSystem is a wrapper around an {@link ActorSystemImpl}
+ */
 public class ActorSystem {
 
+    /**
+     * Wrapped ActorSystemImpl
+     */
     protected ActorSystemImpl system;
 
     public final UUID USER_ID;
     public final UUID SYSTEM_ID;
 
+    /**
+     * Creates a no-name ActorSystem with a {@link DefaultActorSystemImpl}
+     */
     public ActorSystem() {
         this(null, DefaultActorSystemImpl.class);
     }
 
+    /**
+     * Creates a no-name ActorSystem with a {@link DefaultActorSystemImpl} with unbounded queues
+     * @param unbounded 
+     */
     public ActorSystem(boolean unbounded) {
         this(null, DefaultActorSystemImpl.class);
         ((DefaultActorSystemImpl) system).setActorThreadClass(unbounded);
     }
 
+    /**
+     * Creates an ActorSystem with the provided ActorSystemImpl class name
+     * @param clazz subclass of ActorSystemImpl
+     */
     public ActorSystem(Class<? extends ActorSystemImpl> clazz) {
         this(null, clazz);
     }
 
+    /**
+     * Creates a named ActorSystem with a {@link DefaultActorSystemImpl}
+     * @param name of the ActorSystem
+     */
     public ActorSystem(String name) {
         this(name, DefaultActorSystemImpl.class);
     }
 
+    /**
+     * Creates a named ActorSystem with the provided ActorSystemImpl class name
+     * @param name name of the ActorSystem
+     * @param clazz subclass of ActorSystemImpl
+     */
     public ActorSystem(String name, Class<? extends ActorSystemImpl> clazz) {
         super();
 
@@ -63,7 +89,7 @@ public class ActorSystem {
             e.printStackTrace();
         }
 
-        USER_ID = system.USER_ID;
+        USER_ID   = system.USER_ID;
         SYSTEM_ID = system.SYSTEM_ID;
     }
 
@@ -195,20 +221,41 @@ public class ActorSystem {
         return this;
     }
 
+    /**
+     * Gets actor path
+     * @param uuid actor ID
+     * @return actor path
+     */
     public String getActorPath(UUID uuid) {
         return system.getActorPath(uuid);
     }
 
+    /**
+     * Gets actor Id
+     * @param path actor path
+     * @return actor Id
+     */
     public UUID getActorFromPath(String path) {
         return system.getActorFromPath(path);
     }
 
+    /**
+     * Send message to {@link ActorSystemImpl}
+     * @param message
+     * @return 
+     */
     public ActorSystem send(ActorMessage<?> message) {
         system.send(message);
 
         return this;
     }
 
+    /**
+     * Send message to {@link ActorSystemImpl}
+     * @param message
+     * @param path
+     * @return 
+     */
     public ActorSystem sendViaPath(ActorMessage<?> message, String path) {
         system.sendViaPath(message, path);
 

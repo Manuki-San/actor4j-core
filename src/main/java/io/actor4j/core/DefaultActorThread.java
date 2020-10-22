@@ -21,6 +21,9 @@ import java.util.concurrent.locks.LockSupport;
 
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * A DefaultActorThread is an {@link ActorThread}
+ */
 public abstract class DefaultActorThread extends ActorThread {
 
     protected Queue<ActorMessage<?>> directiveQueue;

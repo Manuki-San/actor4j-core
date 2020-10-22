@@ -17,19 +17,24 @@ package io.actor4j.core.pods.actors;
 
 import java.util.UUID;
 
+/**
+ * A DefaultPodActor is a {@link PodActor} 
+ * 
+ */
 public abstract class DefaultPodActor extends PodActor {
-	protected final HandlerPodActorFactory handlerPodActorFactory;
-	protected UUID handlerPodActor;
-	
-	public DefaultPodActor(HandlerPodActorFactory handlerPodActorFactory) {
-		super();
-		this.handlerPodActorFactory = handlerPodActorFactory;
-	}
-	
-	@Override
-	public void preStart() {
-		handlerPodActor = addChild(() -> handlerPodActorFactory.create(groupId, getContext()));
-		
-		register();
-	}
+
+    protected final HandlerPodActorFactory handlerPodActorFactory;
+    protected UUID handlerPodActor;
+
+    public DefaultPodActor(HandlerPodActorFactory handlerPodActorFactory) {
+        super();
+        this.handlerPodActorFactory = handlerPodActorFactory;
+    }
+
+    @Override
+    public void preStart() {
+        handlerPodActor = addChild(() -> handlerPodActorFactory.create(groupId, getContext()));
+
+        register();
+    }
 }

@@ -21,6 +21,9 @@ import java.util.function.BiFunction;
 import io.actor4j.core.actors.Actor;
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * A BridgeActor is a {@link PipeActor}
+ */
 public class BridgeActor extends PipeActor {
 
     public BridgeActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> handler, UUID next) {

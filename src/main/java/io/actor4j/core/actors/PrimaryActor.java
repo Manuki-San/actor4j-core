@@ -49,8 +49,7 @@ public abstract class PrimaryActor extends ActorWithDistributedGroup {
     public void preStart() {
         List<UUID> ids = null;
 
-        if (secondary != null && instances > 0) // creating secondary actors
-        {
+        if (secondary != null && instances > 0) { // creating secondary actors
             ids = addChild(secondary.apply(self()), instances);
         } else {
             ids = new LinkedList<>();
@@ -64,10 +63,20 @@ public abstract class PrimaryActor extends ActorWithDistributedGroup {
         getSystem().setAlias(ids, alias);
     }
 
+    /**
+     * Broadcast a {@link ActorMessage} 
+     * @param message 
+     */
     public void publish(ActorMessage<?> message) {
         hub.broadcast(message);
     }
 
+    /**
+     * Broadcast a message
+     * @param <T> 
+     * @param value 
+     * @param tag 
+     */
     public <T> void publish(T value, int tag) {
         hub.broadcast(value, tag);
     }

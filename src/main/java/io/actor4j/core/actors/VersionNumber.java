@@ -16,5 +16,6 @@
 package io.actor4j.core.actors;
 
 public interface VersionNumber {
-	public long versionNumber();
+
+    public long versionNumber();
 }

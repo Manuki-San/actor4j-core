@@ -45,7 +45,6 @@ public abstract class ActorWithGroup extends Actor implements ActorGroupMember {
      */
     public ActorWithGroup(String name, ActorGroup group) {
         super(name);
-
         groupId = group.getId();
     }
 

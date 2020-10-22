@@ -23,20 +23,37 @@ import io.actor4j.core.actors.Actor;
 import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorMessageMatcher;
 
+/**
+ * A RouterActor is an {@link Actor} forwarding messages to one final recipient
+ * out of a set of routees.
+ */
 public class RouterActor extends Actor {
 
+    /**
+     * The message matcher
+     */
     protected ActorMessageMatcher matcher;
 
+    /**
+     * Creates a RouterActor 
+     * @param routees the list of possible destinations
+     */
     public RouterActor(List<RouteeHandler> routees) {
         this(null, routees);
     }
 
+    /**
+     * Creates a named RouterActor
+     * @param name the actor name
+     * @param routees the list of possible destinations
+     */
     public RouterActor(String name, List<RouteeHandler> routees) {
         super(name);
 
         matcher = new ActorMessageMatcher();
 
         for (RouteeHandler handler : routees) {
+            // use the predicate of the RouteeHandler for the message matcher
             add(handler.getPredicate(), handler.getRoutee());
         }
         matcher.matchElse(msg -> unhandled(msg));

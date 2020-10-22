@@ -20,23 +20,42 @@ import java.util.UUID;
 import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorEmbeddedRouter;
 
+/**
+ * An EmbeddedHostActor is an {@link Actor} with an {@link ActorEmbeddedRouter}
+ */
 public abstract class EmbeddedHostActor extends Actor {
 
     protected ActorEmbeddedRouter router;
     protected boolean redirectEnabled;
 
+    /**
+     * Creates a no-name EmbeddedHostActor without router and without redirection
+     */
     public EmbeddedHostActor() {
         this(null, false);
     }
 
+    /**
+     * Creates a named EmbeddedHostActor without router and without redirection
+     * @param name 
+     */
     public EmbeddedHostActor(String name) {
         this(name, false);
     }
 
+    /**
+     * Creates a no-name EmbeddedHostActor with the specified redirection
+     * @param redirectEnabled 
+     */
     public EmbeddedHostActor(boolean redirectEnabled) {
         this(null, redirectEnabled);
     }
 
+    /**
+     * Creates a named EmbeddedHostActor with the specified redirection
+     * @param name the name of the actor
+     * @param redirectEnabled 
+     */
     public EmbeddedHostActor(String name, boolean redirectEnabled) {
         super(name);
 
@@ -44,6 +63,10 @@ public abstract class EmbeddedHostActor extends Actor {
         this.router = new ActorEmbeddedRouter();
     }
 
+    /**
+     * Gets the router
+     * @return the router
+     */
     public ActorEmbeddedRouter getRouter() {
         return router;
     }
@@ -54,10 +77,13 @@ public abstract class EmbeddedHostActor extends Actor {
         if (redirectEnabled) {
             getSystem().addRedirection(embeddedActor.getId(), self());
         }
-
         return embeddedActor.getId();
     }
 
+    /**
+     * Remove a child {@link EmbeddedActor}
+     * @param embeddedActor 
+     */
     public void removeEmbeddedChild(EmbeddedActor embeddedActor) {
         embeddedActor.host = null;
         router.remove(embeddedActor.id);
@@ -75,7 +101,6 @@ public abstract class EmbeddedHostActor extends Actor {
         } else if (message.dest.equals(self())) {
             receive(message);
         }
-
         return result;
     }
 
@@ -88,7 +113,6 @@ public abstract class EmbeddedHostActor extends Actor {
         } else if (dest.equals(self())) {
             receive(new ActorMessage<T>(value, tag, self(), dest));
         }
-
         return result;
     }
 

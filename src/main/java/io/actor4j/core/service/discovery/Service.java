@@ -29,6 +29,14 @@ public class Service implements Shareable {
     public final String version;
     public final String description;
 
+    /**
+     * Creates a Service
+     * @param name the name of the service
+     * @param uri the uri of the service
+     * @param topics the list of topics of the service
+     * @param version the version of the service
+     * @param description  the description of the service
+     */
     public Service(String name, String uri, List<String> topics, String version, String description) {
         super();
         id = UUID.randomUUID();

@@ -20,15 +20,28 @@ import java.util.Map;
 
 import io.actor4j.core.utils.Shareable;
 
+/**
+ * A {@link Shareable} immutable {@link Map}
+ * @param <K>
+ * @param <V> 
+ */
 public class ImmutableMap<K, V> implements Shareable {
 
     protected final Map<K, V> map;
 
+    /**
+     * Create an immutable {@link Map}
+     * @param map 
+     */
     public ImmutableMap(Map<K, V> map) {
         super();
         this.map = Collections.unmodifiableMap(map);
     }
 
+    /**
+     * Gets the immutable {@link Map}
+     * @return immutable map
+     */
     public Map<K, V> get() {
         return map;
     }

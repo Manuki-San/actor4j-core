@@ -20,16 +20,28 @@ import java.util.Set;
 
 import io.actor4j.core.utils.Shareable;
 
+/**
+ * A {@link Shareable} immutable {@link Set}
+ * @param <T> 
+ */
 public class ImmutableSet<T> implements Shareable {
 
     protected final Set<T> set;
 
+    /**
+     * Creates an immutable {@link Set}
+     * @param set 
+     */
     public ImmutableSet(Set<T> set) {
         super();
 
         this.set = Collections.unmodifiableSet(set);
     }
 
+    /**
+     * Gets an immutable {@link Set}
+     * @return an immutable Set
+     */
     public Set<T> get() {
         return set;
     }

@@ -38,6 +38,9 @@ import io.actor4j.core.utils.ActorFactory;
 import io.actor4j.core.utils.ActorMessageFlowable;
 import io.reactivex.Flowable;
 
+/**
+ * A PseudoActorCell is an {@link ActorCell} for a {@link PseudoActor}
+ */
 public class PseudoActorCell extends ActorCell {
 
     protected final Queue<ActorMessage<?>> outerQueueL2;

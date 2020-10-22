@@ -19,6 +19,10 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.Copyable;
 import io.actor4j.core.utils.Shareable;
 
+/**
+ * A {@link Shareable} immutable {@link Object}
+ * @param <T> 
+ */
 public class ImmutableObject<T> implements Shareable {
 
     protected final T value;
@@ -35,6 +39,10 @@ public class ImmutableObject<T> implements Shareable {
         this.value = value;
     }
 
+    /**
+     * Get the immutable {@link Object}
+     * @return an immutable Object
+     */
     public T get() {
         return value;
     }

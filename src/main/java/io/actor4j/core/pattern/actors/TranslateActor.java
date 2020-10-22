@@ -21,6 +21,9 @@ import java.util.function.BiFunction;
 import io.actor4j.core.actors.Actor;
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * A TranslateActor is a {@link PipeActor}
+ */
 public class TranslateActor extends PipeActor {
 
     public TranslateActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> translate, UUID next) {

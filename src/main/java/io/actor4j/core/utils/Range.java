@@ -30,6 +30,9 @@
  */
 package io.actor4j.core.utils;
 
+/**
+ * Range of int
+ */
 public class Range {
 
     public int low;

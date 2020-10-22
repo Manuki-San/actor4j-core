@@ -27,6 +27,9 @@ import io.actor4j.core.annotations.Stateless;
 import io.actor4j.core.immutable.ImmutableList;
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * A ResourceActorCell is an {@link ActorCell} for a {@link ResourceActor}
+ */
 public class ResourceActorCell extends ActorCell {
 
     protected boolean stateful;

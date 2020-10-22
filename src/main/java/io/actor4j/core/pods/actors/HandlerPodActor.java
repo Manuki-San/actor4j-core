@@ -23,45 +23,48 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.pods.PodContext;
 
 public abstract class HandlerPodActor extends PodChildActor {
-	protected String alias;
-	protected Map<UUID, ActorMessage<?>> map;
 
-	public HandlerPodActor(String alias, UUID groupId, PodContext context) {
-		super(groupId, context);
-		this.alias = alias;
+    protected String alias;
+    protected Map<UUID, ActorMessage<?>> map;
 
-		this.map = new HashMap<>();
-	}
-	
-	@Override
-	public void preStart() {
-		if (context.isShard())
-			setAlias(alias+context.getShardId(), false);
-		else
-			setAlias(alias, false);
-	}
-	
-	@Override
-	public void receive(ActorMessage<?> message) {
-		if (message.value!=null) {
-			ActorMessage<?> originalMessage = null;
-			if (message.interaction!=null)
-				originalMessage = map.get(message.interaction);
-			
-			if (originalMessage!=null) {
-				map.remove(message.interaction);
-				callback(message, originalMessage, originalMessage.source);
-			}
-			else {
-				UUID interaction = UUID.randomUUID();
-				map.put(interaction, message.copy()); 
-				handle(message, interaction);
-			}
-		}
-		else
-			unhandled(message);
-	}
-	
-	public abstract void handle(ActorMessage<?> message, UUID interaction);
-	public abstract void callback(ActorMessage<?> message, ActorMessage<?> originalMessage, UUID dest);
+    public HandlerPodActor(String alias, UUID groupId, PodContext context) {
+        super(groupId, context);
+        this.alias = alias;
+
+        this.map = new HashMap<>();
+    }
+
+    @Override
+    public void preStart() {
+        if (context.isShard()) {
+            setAlias(alias + context.getShardId(), false);
+        } else {
+            setAlias(alias, false);
+        }
+    }
+
+    @Override
+    public void receive(ActorMessage<?> message) {
+        if (message.value != null) {
+            ActorMessage<?> originalMessage = null;
+            if (message.interaction != null) {
+                originalMessage = map.get(message.interaction);
+            }
+
+            if (originalMessage != null) {
+                map.remove(message.interaction);
+                callback(message, originalMessage, originalMessage.source);
+            } else {
+                UUID interaction = UUID.randomUUID();
+                map.put(interaction, message.copy());
+                handle(message, interaction);
+            }
+        } else {
+            unhandled(message);
+        }
+    }
+
+    public abstract void handle(ActorMessage<?> message, UUID interaction);
+
+    public abstract void callback(ActorMessage<?> message, ActorMessage<?> originalMessage, UUID dest);
 }

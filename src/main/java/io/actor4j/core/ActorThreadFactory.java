@@ -17,6 +17,9 @@ package io.actor4j.core;
 
 import java.lang.reflect.Constructor;
 
+/**
+ * Factory for {@link ActorThread}
+ */
 public class ActorThreadFactory extends DefaultThreadFactory {
 
     public ActorThreadFactory(String name) {
@@ -27,9 +30,7 @@ public class ActorThreadFactory extends DefaultThreadFactory {
         ActorThread t = null;
         try {
             Constructor<? extends ActorThread> constructor = system.actorThreadClass.getConstructor(ThreadGroup.class, String.class, ActorSystemImpl.class);
-            t = constructor.newInstance(group,
-                    name + "-worker-thread-" + index.getAndIncrement(),
-                    system);
+            t = constructor.newInstance(group, name + "-worker-thread-" + index.getAndIncrement(), system);
 
             if (t.isDaemon()) {
                 t.setDaemon(false);

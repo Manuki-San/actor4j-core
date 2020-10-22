@@ -22,6 +22,9 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.jctools.queues.MpscArrayQueue;
 import org.jctools.queues.MpscLinkedQueue;
 
+/**
+ * A BoundedActorTread is a bounded {@link DefaultActorThread}
+ */
 public class BoundedActorThread extends DefaultActorThread {
 
     public BoundedActorThread(ThreadGroup group, String name, ActorSystemImpl system) {
@@ -30,22 +33,22 @@ public class BoundedActorThread extends DefaultActorThread {
 
     @Override
     public void configQueues() {
+        /* unbounded */        
         directiveQueue = new MpscLinkedQueue<>();
         /* unbounded */
         priorityQueue = new PriorityBlockingQueue<>(system.getQueueSize());
-        /* unbounded */
 
+        /* bounded */
         serverQueueL2 = new MpscArrayQueue<>(system.getQueueSize());
-        /* bounded */
+        /* unbounded */
         serverQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
-        /* unbounded */
 
+        /* bounded */
         outerQueueL2 = new MpscArrayQueue<>(system.getQueueSize());
-        /* bounded */
-        outerQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
         /* unbounded */
+        outerQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
 
-        innerQueue = new CircularFifoQueue<>(system.getQueueSize());
         /* bounded */
+        innerQueue = new CircularFifoQueue<>(system.getQueueSize());
     }
 }

@@ -23,6 +23,9 @@ import java.util.function.BiConsumer;
 
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * Pool of {@link ActorThread}
+ */
 public class ActorThreadPool {
 
     protected final ActorSystemImpl system;

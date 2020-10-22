@@ -54,6 +54,14 @@ import static io.actor4j.core.protocols.ActorProtocolTag.*;
 import static io.actor4j.core.utils.ActorLogger.systemLogger;
 import static io.actor4j.core.utils.ActorUtils.*;
 
+
+/**
+ * An ActorCell is a wrapper around one {@link Actor}
+ * An {@link ActorThread} passes a message to an ActorCell which injects it into the {@link Actor} 
+ * for processing When an actor wants to send a {@link ActorMessage message} to 
+ * another actor, the {@link ActorMessage message} is first redirected to the 
+ * corresponding ActorCell
+ */
 public class ActorCell {
 
     static class PersistenceTuple {
@@ -75,7 +83,13 @@ public class ActorCell {
 
     protected final UUID id;
 
+    /**
+     * Parent ActorCell ID
+     */
     protected UUID parent;
+    /**
+     * List of ActorCell children
+     */
     protected final Queue<UUID> children;
 
     protected final AtomicBoolean active;
@@ -85,7 +99,9 @@ public class ActorCell {
     protected final RestartProtocol restartProtocol;
     protected final StopProtocol stopProtocol;
     protected final RecoverProtocol recoverProtocol;
-
+    /**
+     * List of ActorCell monitoring the death of this ActorCell
+     */
     protected final Queue<UUID> deathWatcher;
 
     protected final Function<ActorMessage<?>, Boolean> processedDirective;
@@ -96,6 +112,12 @@ public class ActorCell {
     protected final AtomicLong requestRate;
     protected final /*thread-safe*/ SynchronizedDescriptiveStatistics processingTimeStatistics;
 
+    /**
+     * Creates an ActorCell inside an {@link ActorSystemImpl} wrapping an {@link Actor}
+     * 
+     * @param system the actor system
+     * @param actor one actor
+     */
     public ActorCell(ActorSystemImpl system, Actor actor) {
         super();
 
@@ -185,6 +207,10 @@ public class ActorCell {
         return actor;
     }
 
+    /**
+     * Sets the wrapped {@link Actor}
+     * @param actor 
+     */
     public void setActor(Actor actor) {
         this.actor = actor;
     }
@@ -221,6 +247,10 @@ public class ActorCell {
         return (parent == system.USER_ID);
     }
 
+    /**
+     * Receives a message and forward it to the wrapped {@link Actor}
+     * @param message 
+     */
     public void internal_receive(ActorMessage<?> message) {
         if (!processedDirective.apply(message) && active.get()) {
             Consumer<ActorMessage<?>> behaviour = behaviourStack.peek();
@@ -232,6 +262,12 @@ public class ActorCell {
         }
     }
 
+    /**
+     * Change the behaviour
+     * 
+     * @param behaviour new behaviour
+     * @param replace true to replace, false to add to the stack
+     */
     public void become(Consumer<ActorMessage<?>> behaviour, boolean replace) {
         if (replace && !behaviourStack.isEmpty()) {
             behaviourStack.pop();
@@ -239,18 +275,32 @@ public class ActorCell {
         behaviourStack.push(behaviour);
     }
 
+    /**
+     * Change the behaviour
+     * @param behaviour new behaviour
+     */
     public void become(Consumer<ActorMessage<?>> behaviour) {
         become(behaviour, true);
     }
 
+    /**
+     * Change the behaviour to the previous one
+     */
     public void unbecome() {
         behaviourStack.pop();
     }
 
+    /**
+     * Clear the stack of behaviours
+     */
     public void unbecomeAll() {
         behaviourStack.clear();
     }
 
+    /**
+     * Send a message
+     * @param message message sent
+     */
     public void send(ActorMessage<?> message) {
         if (system.messagingEnabled.get()) {
             system.messageDispatcher.post(message, id);
@@ -259,6 +309,11 @@ public class ActorCell {
         }
     }
 
+    /**
+     * Send a message 
+     * @param message message sent
+     * @param alias 
+     */
     public void send(ActorMessage<?> message, String alias) {
         if (system.messagingEnabled.get()) {
             system.messageDispatcher.post(message, id, alias);
@@ -280,10 +335,20 @@ public class ActorCell {
         }
     }
 
+    /**
+     * Send a message
+     * @param message message sent
+     * @param node
+     * @param path 
+     */
     public void send(ActorMessage<?> message, ActorServiceNode node, String path) {
         system.messageDispatcher.post(message, node, path);
     }
 
+    /**
+     * Send a priority message
+     * @param message message sent
+     */
     public void priority(ActorMessage<?> message) {
         if (system.messagingEnabled.get()) {
             system.messageDispatcher.postPriority(message);
@@ -307,6 +372,11 @@ public class ActorCell {
         }
     }
 
+    /**
+     * Add child ActorCell
+     * @param cell
+     * @return ID of the child ActorCell
+     */
     protected UUID internal_addChild(ActorCell cell) {
         cell.parent = id;
         children.add(cell.id);
@@ -355,6 +425,10 @@ public class ActorCell {
         return result;
     }
 
+    /**
+     * Get Supervisor strategy
+     * @return Supervisor strategy
+     */
     public SupervisorStrategy supervisorStrategy() {
         return actor.supervisorStrategy();
     }
@@ -364,14 +438,25 @@ public class ActorCell {
         actor.preStart();
     }
 
+    /**
+     * ActorCell preRestart delegates to Actor preRestart
+     * @param reason 
+     */
     public void preRestart(Exception reason) {
         actor.preRestart(reason);
     }
 
+    /**
+     * ActorCell postRestart delegates to Actor postRestart
+     * @param reason 
+     */
     public void postRestart(Exception reason) {
         actor.postRestart(reason);
     }
 
+    /**
+     * ActorCell postStop delegates to Actor postStop
+     */
     public void postStop() {
         actor.postStop();
     }

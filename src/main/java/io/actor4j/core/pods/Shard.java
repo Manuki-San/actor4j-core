@@ -17,6 +17,9 @@ package io.actor4j.core.pods;
 
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * A shard is a group of entities that will be managed together
+ */
 public interface Shard {
 
     public String shardId(ActorMessage<?> message, int totalShardCount);

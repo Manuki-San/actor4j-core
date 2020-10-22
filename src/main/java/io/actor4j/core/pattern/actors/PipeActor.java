@@ -21,15 +21,31 @@ import java.util.function.BiFunction;
 import io.actor4j.core.actors.Actor;
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * A PipeActor is an {@link Actor} 
+ * - applying a function to the incoming messages
+ * - forwarding the transformed messages to the next {@link Actor} specified
+ */
 public class PipeActor extends Actor {
 
     protected BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> handler;
     protected UUID next;
 
+    /**
+     * Creates a new PipeActor
+     * @param handler the function to apply
+     * @param next  the destination of the message
+     */
     public PipeActor(BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> handler, UUID next) {
         this(null, handler, next);
     }
 
+    /**
+     * Creates a new named PipeActor
+     * @param name the name of the actor
+     * @param handler the function to apply
+     * @param next the destination of the message
+     */
     public PipeActor(String name, BiFunction<Actor, ActorMessage<?>, ActorMessage<?>> handler, UUID next) {
         super(name);
 

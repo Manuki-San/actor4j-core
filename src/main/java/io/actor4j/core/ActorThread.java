@@ -24,6 +24,9 @@ import io.actor4j.core.failsafe.Method;
 import io.actor4j.core.failsafe.FailsafeMethod;
 import io.actor4j.core.messages.ActorMessage;
 
+/**
+ * An ActorThread is a {@link Thread}
+ */
 public abstract class ActorThread extends Thread {
 
     protected final UUID uuid; // for safety

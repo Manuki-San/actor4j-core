@@ -21,21 +21,26 @@ import io.actor4j.core.utils.CacheLRUWithGC;
 
 import static io.actor4j.core.utils.ActorUtils.*;
 
+/**
+ * An ActorWithCache is an {@link Actor} with {@link Cache}
+ * @param <K>
+ * @param <V> 
+ */
 public class ActorWithCache<K, V> extends Actor {
 
     protected int cacheSize;
     protected Cache<K, V> cache;
 
-    public static final int GC = checkTag(300);
-    public static final int EVICT = GC;
-    public static final int GET = checkTag(301);
-    public static final int SET = checkTag(302);
-    public static final int UPDATE = checkTag(303);
-    public static final int DEL = checkTag(304);
+    public static final int GC      = checkTag(300);
+    public static final int EVICT   = GC;
+    public static final int GET     = checkTag(301);
+    public static final int SET     = checkTag(302);
+    public static final int UPDATE  = checkTag(303);
+    public static final int DEL     = checkTag(304);
     public static final int DEL_ALL = checkTag(305);
-    public static final int CLEAR = checkTag(306);
-    public static final int CAS = checkTag(307); // CompareAndSet
-    public static final int CAU = checkTag(308); // CompareAndUpdate
+    public static final int CLEAR   = checkTag(306);
+    public static final int CAS     = checkTag(307); // CompareAndSet
+    public static final int CAU     = checkTag(308); // CompareAndUpdate
 
     public static final int SUBSCRIBE_SECONDARY = checkTag(309);
 

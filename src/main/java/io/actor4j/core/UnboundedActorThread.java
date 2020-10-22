@@ -21,6 +21,9 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import org.jctools.queues.MpscLinkedQueue;
 
+/**
+ * An UnboundedActorThread is an unbounded {@link DefaultActorThread}
+ */
 public class UnboundedActorThread extends DefaultActorThread {
 
     public UnboundedActorThread(ThreadGroup group, String name, ActorSystemImpl system) {
@@ -29,22 +32,22 @@ public class UnboundedActorThread extends DefaultActorThread {
 
     @Override
     public void configQueues() {
+        /* unbounded */        
         directiveQueue = new MpscLinkedQueue<>();
         /* unbounded */
         priorityQueue = new PriorityBlockingQueue<>(system.getQueueSize());
-        /* unbounded */
 
+        /* unbounded */
         serverQueueL2 = new MpscLinkedQueue<>();
         /* unbounded */
         serverQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
-        /* unbounded */
 
+        /* unbounded */
         outerQueueL2 = new MpscLinkedQueue<>();
         /* unbounded */
         outerQueueL1 = new ArrayDeque<>(system.getBufferQueueSize());
-        /* unbounded */
 
-        innerQueue = new LinkedList<>();
         /* unbounded */
+        innerQueue = new LinkedList<>();
     }
 }

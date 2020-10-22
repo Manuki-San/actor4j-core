@@ -36,14 +36,11 @@ public class DefaultThreadFactory implements ThreadFactory {
     public DefaultThreadFactory(String name) {
         this.name = name;
         SecurityManager s = System.getSecurityManager();
-        group = (s != null) ? s.getThreadGroup()
-                : Thread.currentThread().getThreadGroup();
+        group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
     }
 
     public Thread newThread(Runnable r) {
-        Thread t = new Thread(group, r,
-                name + "-" + index.getAndIncrement(),
-                0);
+        Thread t = new Thread(group, r, name + "-" + index.getAndIncrement(), 0);
         if (t.isDaemon()) {
             t.setDaemon(false);
         }
