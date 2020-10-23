@@ -55,7 +55,7 @@ import static io.actor4j.core.utils.ActorLogger.systemLogger;
 import static io.actor4j.core.utils.ActorUtils.*;
 
 /**
- * An ActorCell is a wrapper around one {@link Actor} An {@link ActorThread}
+ * An ActorCell is a wrapper around one {@link io.actor4j.core.actors.Actor} An {@link ActorThread}
  * passes a message to an ActorCell which injects it into the {@link Actor} for
  * processing When an actor wants to send a {@link ActorMessage message} to
  * another actor, the {@link ActorMessage message} is first redirected to the
