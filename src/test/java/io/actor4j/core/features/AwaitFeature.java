@@ -31,63 +31,64 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorFactory;
 
 public class AwaitFeature {
-	protected ActorSystem system;
-	
-	@Before
-	public void before() {
-		system = new ActorSystem();
-		system.setParallelismMin(1);
-	}
-		
-	@Test(timeout=5000)
-	public void test_await() {
-		CountDownLatch testDone = new CountDownLatch(1);
-		
-		AtomicBoolean[] postconditions = new AtomicBoolean[2];
-		for (int i=0; i<postconditions.length; i++)
-			postconditions[i] = new AtomicBoolean(false);
-		
-		UUID dest = system.addActor(new ActorFactory() { 
-			@Override
-			public Actor create() {
-				return new Actor() {
-					protected Consumer<ActorMessage<?>> action = new Consumer<ActorMessage<?>>() {
-						@Override
-						public void accept(ActorMessage<?> t) {
-							postconditions[0].set(true);
-							unbecome();
-						}
-					};
-					
-					protected boolean first = true;
-					
-					@Override
-					public void receive(ActorMessage<?> message) {
-						if (first) {
-							await(1, action);
-							first = false;
-						}
-						else {
-							postconditions[1].set(true);
-							testDone.countDown();
-						}
-					}
-				};
-			}
-		});
-		
-		system.send(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, dest));
-		system.send(new ActorMessage<Object>(null, 1, system.SYSTEM_ID, dest));
-		system.send(new ActorMessage<Object>(null, 1, system.SYSTEM_ID, dest));
-		system.start();
-		try {
-			testDone.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		system.shutdown(true);
-		
-		assertEquals(true, postconditions[0].get());
-		assertEquals(true, postconditions[1].get());
-	}
+
+    protected ActorSystem system;
+
+    @Before
+    public void before() {
+        system = new ActorSystem();
+        system.setParallelismMin(1);
+    }
+
+    @Test(timeout = 5000)
+    public void test_await() {
+        CountDownLatch testDone = new CountDownLatch(1);
+
+        AtomicBoolean[] postconditions = new AtomicBoolean[2];
+        for (int i = 0; i < postconditions.length; i++) {
+            postconditions[i] = new AtomicBoolean(false);
+        }
+
+        UUID dest = system.addActor(new ActorFactory() {
+            @Override
+            public Actor create() {
+                return new Actor() {
+                    protected Consumer<ActorMessage<?>> action = new Consumer<ActorMessage<?>>() {
+                        @Override
+                        public void accept(ActorMessage<?> t) {
+                            postconditions[0].set(true);
+                            unbecome();
+                        }
+                    };
+
+                    protected boolean first = true;
+
+                    @Override
+                    public void receive(ActorMessage<?> message) {
+                        if (first) {
+                            await(1, action);
+                            first = false;
+                        } else {
+                            postconditions[1].set(true);
+                            testDone.countDown();
+                        }
+                    }
+                };
+            }
+        });
+
+        system.send(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, dest));
+        system.send(new ActorMessage<Object>(null, 1, system.SYSTEM_ID, dest));
+        system.send(new ActorMessage<Object>(null, 1, system.SYSTEM_ID, dest));
+        system.start();
+        try {
+            testDone.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        system.shutdown(true);
+
+        assertEquals(true, postconditions[0].get());
+        assertEquals(true, postconditions[1].get());
+    }
 }

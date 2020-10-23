@@ -31,48 +31,50 @@ import io.actor4j.core.utils.ActorGroup;
 import io.actor4j.core.utils.ActorGroupSet;
 
 public class StatelessActorFeature {
-	protected ActorSystem system;
-	
-	@Before
-	public void before() {
-		system = new ActorSystem();
-	}
-	
-	@Test(timeout=30000)
-	public void test() {
-		system.setParallelismFactor(2);
-		
-		CountDownLatch testDone = new CountDownLatch(system.getParallelismMin()*system.getParallelismFactor());
-		
-		ActorGroup group = new ActorGroupSet();
-		system.setAlias(system.addActor(() -> new StatelessActor(group) {
-			protected boolean first = true;
-			@Override
-			public void receive(ActorMessage<?> message) {
-				logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
-				if (first) {
-					testDone.countDown();
-					first=false;
-				}
-			}
-		}, system.getParallelismMin()*system.getParallelismFactor()), "instances");
-		
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances");
-			}
-		}, 0, 50);
-		
-		system.start();
-		
-		try {
-			testDone.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		timer.cancel();
-		system.shutdownWithActors(true);
-	}
+
+    protected ActorSystem system;
+
+    @Before
+    public void before() {
+        system = new ActorSystem();
+    }
+
+    @Test(timeout = 30000)
+    public void test() {
+        system.setParallelismFactor(2);
+
+        CountDownLatch testDone = new CountDownLatch(system.getParallelismMin() * system.getParallelismFactor());
+
+        ActorGroup group = new ActorGroupSet();
+        system.setAlias(system.addActor(() -> new StatelessActor(group) {
+            protected boolean first = true;
+
+            @Override
+            public void receive(ActorMessage<?> message) {
+                logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
+                if (first) {
+                    testDone.countDown();
+                    first = false;
+                }
+            }
+        }, system.getParallelismMin() * system.getParallelismFactor()), "instances");
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances");
+            }
+        }, 0, 50);
+
+        system.start();
+
+        try {
+            testDone.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        timer.cancel();
+        system.shutdownWithActors(true);
+    }
 }

@@ -24,23 +24,24 @@ import io.actor4j.core.pods.actors.PodChildActor;
 import static io.actor4j.core.utils.ActorLogger.*;
 
 public class HelloActor extends PodChildActor {
-	public HelloActor(UUID groupId, PodContext context) {
-		super(groupId, context);
-	}
 
-	@Override
-	public void preStart() {
-		setAlias("hello");
-	}
+    public HelloActor(UUID groupId, PodContext context) {
+        super(groupId, context);
+    }
 
-	@Override
-	public void receive(ActorMessage<?> message) {
-		logger().debug(message.value);
-		tell(String.format("Hello %s! [domain:%s, primaryReplica:%s, groupId:%s]", 
-				message.value, 
-				context.getDomain(),
-				context.isPrimaryReplica(),
-				groupId)
-				, 42, message.source, message.interaction);
-	}
+    @Override
+    public void preStart() {
+        setAlias("hello");
+    }
+
+    @Override
+    public void receive(ActorMessage<?> message) {
+        logger().debug(message.value);
+        tell(String.format("Hello %s! [domain:%s, primaryReplica:%s, groupId:%s]",
+                message.value,
+                context.getDomain(),
+                context.isPrimaryReplica(),
+                groupId),
+                 42, message.source, message.interaction);
+    }
 }

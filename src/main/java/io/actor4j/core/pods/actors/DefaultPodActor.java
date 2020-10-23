@@ -19,7 +19,6 @@ import java.util.UUID;
 
 /**
  * A DefaultPodActor is a {@link PodActor} 
- * 
  */
 public abstract class DefaultPodActor extends PodActor {
 
@@ -34,7 +33,6 @@ public abstract class DefaultPodActor extends PodActor {
     @Override
     public void preStart() {
         handlerPodActor = addChild(() -> handlerPodActorFactory.create(groupId, getContext()));
-
         register();
     }
 }

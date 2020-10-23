@@ -21,8 +21,9 @@ import io.actor4j.core.ActorSystem;
 import io.actor4j.core.XActorSystemImpl;
 
 public class XActorFeature extends ActorFeature {
-	@Before
-	public void before() {
-		system = new ActorSystem("x-actor4j", XActorSystemImpl.class);
-	}
+
+    @Before
+    public void before() {
+        system = new ActorSystem("x-actor4j", XActorSystemImpl.class);
+    }
 }

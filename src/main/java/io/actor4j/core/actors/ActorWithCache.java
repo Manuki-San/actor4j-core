@@ -44,6 +44,11 @@ public class ActorWithCache<K, V> extends Actor {
 
     public static final int SUBSCRIBE_SECONDARY = checkTag(309);
 
+    /**
+     * Creates a named {@link Actor} with {@link Cache} with the specified size
+     * @param name
+     * @param cacheSize 
+     */
     public ActorWithCache(String name, int cacheSize) {
         super(name);
 
@@ -51,6 +56,10 @@ public class ActorWithCache<K, V> extends Actor {
         cache = new CacheLRUWithGC<>(cacheSize);
     }
 
+    /**
+     * Creates a no-name {@link Actor} with {@link Cache} with the specified size
+     * @param cacheSize 
+     */
     public ActorWithCache(int cacheSize) {
         this(null, cacheSize);
     }

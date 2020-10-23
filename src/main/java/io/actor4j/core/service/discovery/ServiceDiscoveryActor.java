@@ -58,10 +58,9 @@ public class ServiceDiscoveryActor extends Actor {
     public static final int LOOKUP_SERVICE    = checkTag(403);
 
     public ServiceDiscoveryActor(String alias) {
-        this.alias = alias;
-
-        services = new HashMap<>();
-        topicsMap = new HashMap<>();
+        this.alias     = alias;
+        this.services  = new HashMap<>();
+        this.topicsMap = new HashMap<>();
     }
 
     @Override

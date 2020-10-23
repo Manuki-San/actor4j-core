@@ -32,7 +32,7 @@ public class UnboundedActorThread extends DefaultActorThread {
 
     @Override
     public void configQueues() {
-        /* unbounded */        
+        /* unbounded */
         directiveQueue = new MpscLinkedQueue<>();
         /* unbounded */
         priorityQueue = new PriorityBlockingQueue<>(system.getQueueSize());

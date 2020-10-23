@@ -21,14 +21,27 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorMessageFlowable;
 import io.reactivex.Flowable;
 
+/**
+ * An ActorWithRxStash is an {@link Actor} implementing the queue stash.
+ * With stash, messages can be temporarily stored, which are not to be processed
+ * immediately. RxStash provides access to stash as an observer by using RxJava.
+ * This allows a comfortable access to stash (filters, transformations, aggregators, etc ...)
+ */
 public abstract class ActorWithRxStash extends Actor {
 
     protected Flowable<ActorMessage<?>> rxStash;
 
+    /**
+     * Creates a no-name ActorWithRxStash
+     */
     public ActorWithRxStash() {
         this(null);
     }
 
+    /**
+     * Creates a named ActorWithRxStash
+     * @param name the name of the actor
+     */
     public ActorWithRxStash(String name) {
         super(name);
 

@@ -152,10 +152,10 @@ public class ActorExecuterService {
         }
 
         /*
-		 * necessary before executing onStartup; 
-		 * creating of childrens in Actor::preStart: childrens needs to register at the dispatcher
-		 * (see also ActorSystemImpl::internal_addCell)
-         */
+        * necessary before executing onStartup; 
+	* creating of childrens in Actor::preStart: childrens needs to register at the dispatcher
+	* (see also ActorSystemImpl::internal_addCell)
+        */
         started.set(true);
 
         if (onStartup != null) {

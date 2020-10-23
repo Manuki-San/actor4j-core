@@ -21,14 +21,26 @@ import java.util.function.Consumer;
 
 import io.actor4j.core.persistence.ActorPersistenceObject;
 
+/**
+ * A PersistentActor is an {@link Actor} that can be persisted
+ * @param <S>
+ * @param <E> 
+ */
 public abstract class PersistentActor<S extends ActorPersistenceObject, E extends ActorPersistenceObject> extends Actor implements PersistenceId {
 
     public static final int RECOVER = INTERNAL_RECOVER;
 
+    /**
+     * Creates a no-name PersistentActor
+     */
     public PersistentActor() {
         super();
     }
 
+    /**
+     * Creates a named PersistentActor
+     * @param name the name of the actor
+     */
     public PersistentActor(String name) {
         super(name);
     }

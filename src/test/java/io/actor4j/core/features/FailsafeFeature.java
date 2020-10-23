@@ -30,68 +30,69 @@ import io.actor4j.core.messages.ActorMessage;
 import io.actor4j.core.utils.ActorFactory;
 
 public class FailsafeFeature {
-	protected ActorSystem system;
 
-	@Before
-	public void before() {
-		system = new ActorSystem();
-		system.setParallelismMin(1);
-	}
-	
-	@Test(timeout=5000)
-	public void test() {
-		CountDownLatch testDone = new CountDownLatch(1);
-		
-		UUID dest = system.addActor(new ActorFactory() { 
-			@Override
-			public Actor create() {
-				return new Actor("FailsafeFeatureActor") {
-					@Override
-					public void receive(ActorMessage<?> message) {
-						throw new NullPointerException();
-					}
-					
-					@Override
-					public void preRestart(Exception reason) {
-						super.preRestart(reason);
-						assertEquals(new NullPointerException().getMessage(), reason.getMessage());
-					}
-					
-					@Override
-					public void postRestart(Exception reason) {
-						super.postRestart(reason);
-						assertEquals(new NullPointerException().getMessage(), reason.getMessage());
-					}
-				};
-			}
-		});
-		
-		ErrorHandler errorHandler = system.underlyingImpl().getExecuterService().getFailsafeManager().getErrorHandler();
-		system.underlyingImpl().getExecuterService().getFailsafeManager().setErrorHandler(new ErrorHandler() {
-			@Override
-			public void handle(Throwable t, String message, UUID uuid) {
-				errorHandler.handle(t, message, uuid);
-				assertEquals(new NullPointerException().getMessage(), t.getMessage());
-				assertEquals("actor", message);
-				assertEquals(dest, uuid);
-				testDone.countDown();
-			}
-		});
-		
-		system.send(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, dest));
-		system.send(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, dest));
-		system.start();
-		try {
-			testDone.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		system.shutdown(true);
-	}
-	
-	public static void main(String[] args) {
-		FailsafeFeature safetyFeature = new FailsafeFeature();
-		safetyFeature.before();
-		safetyFeature.test();
-	}
+    protected ActorSystem system;
+
+    @Before
+    public void before() {
+        system = new ActorSystem();
+        system.setParallelismMin(1);
+    }
+
+    @Test(timeout = 5000)
+    public void test() {
+        CountDownLatch testDone = new CountDownLatch(1);
+
+        UUID dest = system.addActor(new ActorFactory() {
+            @Override
+            public Actor create() {
+                return new Actor("FailsafeFeatureActor") {
+                    @Override
+                    public void receive(ActorMessage<?> message) {
+                        throw new NullPointerException();
+                    }
+
+                    @Override
+                    public void preRestart(Exception reason) {
+                        super.preRestart(reason);
+                        assertEquals(new NullPointerException().getMessage(), reason.getMessage());
+                    }
+
+                    @Override
+                    public void postRestart(Exception reason) {
+                        super.postRestart(reason);
+                        assertEquals(new NullPointerException().getMessage(), reason.getMessage());
+                    }
+                };
+            }
+        });
+
+        ErrorHandler errorHandler = system.underlyingImpl().getExecuterService().getFailsafeManager().getErrorHandler();
+        system.underlyingImpl().getExecuterService().getFailsafeManager().setErrorHandler(new ErrorHandler() {
+            @Override
+            public void handle(Throwable t, String message, UUID uuid) {
+                errorHandler.handle(t, message, uuid);
+                assertEquals(new NullPointerException().getMessage(), t.getMessage());
+                assertEquals("actor", message);
+                assertEquals(dest, uuid);
+                testDone.countDown();
+            }
+        });
+
+        system.send(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, dest));
+        system.send(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, dest));
+        system.start();
+        try {
+            testDone.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        system.shutdown(true);
+    }
+
+    public static void main(String[] args) {
+        FailsafeFeature safetyFeature = new FailsafeFeature();
+        safetyFeature.before();
+        safetyFeature.test();
+    }
 }

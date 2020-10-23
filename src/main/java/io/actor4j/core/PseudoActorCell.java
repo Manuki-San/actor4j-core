@@ -39,7 +39,7 @@ import io.actor4j.core.utils.ActorMessageFlowable;
 import io.reactivex.Flowable;
 
 /**
- * A PseudoActorCell is an {@link ActorCell} for a {@link PseudoActor}
+ * A PseudoActorCell is an {@link ActorCell} wrapping a {@link io.actor4j.core.actors.PseudoActor}
  */
 public class PseudoActorCell extends ActorCell {
 

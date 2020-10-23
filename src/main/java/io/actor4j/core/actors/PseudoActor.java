@@ -25,6 +25,14 @@ import io.actor4j.core.PseudoActorCell;
 import io.actor4j.core.messages.ActorMessage;
 import io.reactivex.Flowable;
 
+/**
+ * A PseudoActor is a mediator between the outside world and the {@link ActorSystem}
+ * It allows communication with the actors within the actor system from outside.
+ * Unlike the other actors, the PseudoActor has its own message queue, in which
+ * the messages of other actors can be stored by the {@link ActorSystem}. The class
+ * PseudoActor is derived from {@link ActorWithRxStash}. To be able to process received
+ * messages, the run method must be started manually.
+ */
 public abstract class PseudoActor extends ActorWithRxStash {
 
     public PseudoActor(ActorSystem system, boolean blocking) {

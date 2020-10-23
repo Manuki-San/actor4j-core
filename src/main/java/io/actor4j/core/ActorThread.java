@@ -78,10 +78,8 @@ public abstract class ActorThread extends Thread {
             if (system.counterEnabled) {
                 counter.getAndIncrement();
             }
-
             result = true;
         }
-
         return result;
     }
 

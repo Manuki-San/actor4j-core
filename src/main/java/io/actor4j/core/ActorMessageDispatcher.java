@@ -22,8 +22,9 @@ import java.util.UUID;
 import io.actor4j.core.messages.ActorMessage;
 
 /**
- * An ActorMessageDispatcher acts as a link between the {@link Actor} during message passing
- * It places the new message in the appropriate queue of the ActorThread
+ * An ActorMessageDispatcher acts as a link between the {@link Actor} during
+ * message passing It places the new message in the appropriate queue of the
+ * ActorThread
  */
 public abstract class ActorMessageDispatcher {
 

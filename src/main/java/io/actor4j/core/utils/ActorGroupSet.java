@@ -27,25 +27,21 @@ public class ActorGroupSet extends HashSet<UUID> implements ActorGroup {
 
     public ActorGroupSet() {
         super();
-
         id = UUID.randomUUID();
     }
 
     public ActorGroupSet(Collection<UUID> c) {
         super(c);
-
         id = UUID.randomUUID();
     }
 
     public ActorGroupSet(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
-
         id = UUID.randomUUID();
     }
 
     public ActorGroupSet(int initialCapacity) {
         super(initialCapacity);
-
         id = UUID.randomUUID();
     }
 

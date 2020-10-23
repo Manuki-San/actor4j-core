@@ -21,9 +21,10 @@ import io.actor4j.core.ActorSystem;
 import io.actor4j.core.XActorSystemImpl;
 
 public class XFailsafeFeature extends FailsafeFeature {
-	@Before
-	public void before() {
-		system = new ActorSystem("x-actor4j", XActorSystemImpl.class);
-		system.setParallelismMin(1);
-	}
+
+    @Before
+    public void before() {
+        system = new ActorSystem("x-actor4j", XActorSystemImpl.class);
+        system.setParallelismMin(1);
+    }
 }

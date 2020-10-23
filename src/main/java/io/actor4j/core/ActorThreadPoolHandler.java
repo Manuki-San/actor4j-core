@@ -103,8 +103,7 @@ public class ActorThreadPoolHandler {
             if (id_dest != null) {
                 ActorThread t = threadsMap.get(id_dest);
 
-                if (id_source != null && id_source.equals(id_dest)
-                        && Thread.currentThread().getId() == id_source.longValue()) {
+                if (id_source != null && id_source.equals(id_dest) && Thread.currentThread().getId() == id_source.longValue()) {
                     t.innerQueue(message.copy());
                 } else {
                     t.outerQueue(message.copy());

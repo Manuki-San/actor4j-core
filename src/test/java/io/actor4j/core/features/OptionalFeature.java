@@ -24,34 +24,34 @@ import org.junit.Test;
 import io.actor4j.core.utils.ActorOptional;
 
 public class OptionalFeature {
-	@Test
-	public void test() {
-		Optional<Integer> optional1 = null;
-		
-		optional1 = Optional.ofNullable(0);
-		assertTrue(optional1.isPresent());
-		assertEquals(0, (int)optional1.get());
-		
-		optional1 = Optional.ofNullable(null);
-		assertFalse(optional1.isPresent());
-		
-		/*----------------------------------*/
-		
-		ActorOptional<Integer> optional2 = null;
-		
-		optional2 = ActorOptional.of(0);
-		assertTrue(optional2.isDone());
-		assertTrue(optional2.isPresent());
-		assertEquals(0, (int)optional2.get());
-		
-		optional2 = ActorOptional.of(null);
-		assertTrue(optional2.isDone());
-		assertFalse(optional2.isPresent());
-		assertNull(optional2.get());
-		
-		optional2 = ActorOptional.none();
-		assertFalse(optional2.isDone());
-		assertFalse(optional2.isPresent());
-		assertNull(optional2.get());
-	}
+
+    @Test
+    public void test() {
+        Optional<Integer> optional1 = null;
+
+        optional1 = Optional.ofNullable(0);
+        assertTrue(optional1.isPresent());
+        assertEquals(0, (int) optional1.get());
+
+        optional1 = Optional.ofNullable(null);
+        assertFalse(optional1.isPresent());
+
+        /*----------------------------------*/
+        ActorOptional<Integer> optional2 = null;
+
+        optional2 = ActorOptional.of(0);
+        assertTrue(optional2.isDone());
+        assertTrue(optional2.isPresent());
+        assertEquals(0, (int) optional2.get());
+
+        optional2 = ActorOptional.of(null);
+        assertTrue(optional2.isDone());
+        assertFalse(optional2.isPresent());
+        assertNull(optional2.get());
+
+        optional2 = ActorOptional.none();
+        assertFalse(optional2.isDone());
+        assertFalse(optional2.isPresent());
+        assertNull(optional2.get());
+    }
 }

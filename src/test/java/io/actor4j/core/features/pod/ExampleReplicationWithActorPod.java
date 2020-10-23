@@ -24,33 +24,34 @@ import io.actor4j.core.pods.actors.HandlerPodActor;
 import io.actor4j.core.pods.actors.PodActor;
 
 public class ExampleReplicationWithActorPod extends ActorPod {
-	@Override
-	public PodActor create() {
-		return new DefaultPodActor((groupId, context) -> new HandlerPodActor(domain(), groupId, context) {
-				@Override
-				public void handle(ActorMessage<?> message, UUID interaction) {
-					sendViaAlias(new ActorMessage<>(message.value, message.tag, self(), null, interaction, "", ""), "hello"+groupId);
-				}
 
-				@Override
-				public void callback(ActorMessage<?> message, ActorMessage<?> originalMessage, UUID dest) {
-					tell(message.value, message.tag, dest);
-				}
-			}) {
-			@Override
-			public void register() {
-				addChild(() -> new HelloActor(groupId, getContext()));
-			}
+    @Override
+    public PodActor create() {
+        return new DefaultPodActor((groupId, context) -> new HandlerPodActor(domain(), groupId, context) {
+            @Override
+            public void handle(ActorMessage<?> message, UUID interaction) {
+                sendViaAlias(new ActorMessage<>(message.value, message.tag, self(), null, interaction, "", ""), "hello" + groupId);
+            }
 
-			@Override
-			public void receive(ActorMessage<?> message) {
-				unhandled(message);
-			}
-		};
-	}
+            @Override
+            public void callback(ActorMessage<?> message, ActorMessage<?> originalMessage, UUID dest) {
+                tell(message.value, message.tag, dest);
+            }
+        }) {
+            @Override
+            public void register() {
+                addChild(() -> new HelloActor(groupId, getContext()));
+            }
 
-	@Override
-	public String domain() {
-		return "ExampleReplicationWithActorPod";
-	}
+            @Override
+            public void receive(ActorMessage<?> message) {
+                unhandled(message);
+            }
+        };
+    }
+
+    @Override
+    public String domain() {
+        return "ExampleReplicationWithActorPod";
+    }
 }

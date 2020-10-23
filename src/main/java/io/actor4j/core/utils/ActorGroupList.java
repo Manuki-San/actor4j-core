@@ -27,13 +27,11 @@ public class ActorGroupList extends LinkedList<UUID> implements ActorGroup {
 
     public ActorGroupList() {
         super();
-
         id = UUID.randomUUID();
     }
 
     public ActorGroupList(Collection<UUID> c) {
         super(c);
-
         id = UUID.randomUUID();
     }
 

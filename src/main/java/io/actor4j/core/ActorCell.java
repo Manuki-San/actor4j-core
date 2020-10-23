@@ -54,12 +54,11 @@ import static io.actor4j.core.protocols.ActorProtocolTag.*;
 import static io.actor4j.core.utils.ActorLogger.systemLogger;
 import static io.actor4j.core.utils.ActorUtils.*;
 
-
 /**
- * An ActorCell is a wrapper around one {@link Actor}
- * An {@link ActorThread} passes a message to an ActorCell which injects it into the {@link Actor} 
- * for processing When an actor wants to send a {@link ActorMessage message} to 
- * another actor, the {@link ActorMessage message} is first redirected to the 
+ * An ActorCell is a wrapper around one {@link Actor} An {@link ActorThread}
+ * passes a message to an ActorCell which injects it into the {@link Actor} for
+ * processing When an actor wants to send a {@link ActorMessage message} to
+ * another actor, the {@link ActorMessage message} is first redirected to the
  * corresponding ActorCell
  */
 public class ActorCell {
@@ -113,8 +112,9 @@ public class ActorCell {
     protected final /*thread-safe*/ SynchronizedDescriptiveStatistics processingTimeStatistics;
 
     /**
-     * Creates an ActorCell inside an {@link ActorSystemImpl} wrapping an {@link Actor}
-     * 
+     * Creates an ActorCell inside an {@link ActorSystemImpl} wrapping an
+     * {@link Actor}
+     *
      * @param system the actor system
      * @param actor one actor
      */
@@ -209,7 +209,8 @@ public class ActorCell {
 
     /**
      * Sets the wrapped {@link Actor}
-     * @param actor 
+     *
+     * @param actor
      */
     public void setActor(Actor actor) {
         this.actor = actor;
@@ -249,7 +250,8 @@ public class ActorCell {
 
     /**
      * Receives a message and forward it to the wrapped {@link Actor}
-     * @param message 
+     *
+     * @param message
      */
     public void internal_receive(ActorMessage<?> message) {
         if (!processedDirective.apply(message) && active.get()) {
@@ -264,7 +266,7 @@ public class ActorCell {
 
     /**
      * Change the behaviour
-     * 
+     *
      * @param behaviour new behaviour
      * @param replace true to replace, false to add to the stack
      */
@@ -277,6 +279,7 @@ public class ActorCell {
 
     /**
      * Change the behaviour
+     *
      * @param behaviour new behaviour
      */
     public void become(Consumer<ActorMessage<?>> behaviour) {
@@ -299,6 +302,7 @@ public class ActorCell {
 
     /**
      * Send a message
+     *
      * @param message message sent
      */
     public void send(ActorMessage<?> message) {
@@ -310,9 +314,10 @@ public class ActorCell {
     }
 
     /**
-     * Send a message 
+     * Send a message
+     *
      * @param message message sent
-     * @param alias 
+     * @param alias
      */
     public void send(ActorMessage<?> message, String alias) {
         if (system.messagingEnabled.get()) {
@@ -337,9 +342,10 @@ public class ActorCell {
 
     /**
      * Send a message
+     *
      * @param message message sent
      * @param node
-     * @param path 
+     * @param path
      */
     public void send(ActorMessage<?> message, ActorServiceNode node, String path) {
         system.messageDispatcher.post(message, node, path);
@@ -347,6 +353,7 @@ public class ActorCell {
 
     /**
      * Send a priority message
+     *
      * @param message message sent
      */
     public void priority(ActorMessage<?> message) {
@@ -374,6 +381,7 @@ public class ActorCell {
 
     /**
      * Add child ActorCell
+     *
      * @param cell
      * @return ID of the child ActorCell
      */
@@ -427,6 +435,7 @@ public class ActorCell {
 
     /**
      * Get Supervisor strategy
+     *
      * @return Supervisor strategy
      */
     public SupervisorStrategy supervisorStrategy() {
@@ -440,7 +449,8 @@ public class ActorCell {
 
     /**
      * ActorCell preRestart delegates to Actor preRestart
-     * @param reason 
+     *
+     * @param reason
      */
     public void preRestart(Exception reason) {
         actor.preRestart(reason);
@@ -448,7 +458,8 @@ public class ActorCell {
 
     /**
      * ActorCell postRestart delegates to Actor postRestart
-     * @param reason 
+     *
+     * @param reason
      */
     public void postRestart(Exception reason) {
         actor.postRestart(reason);

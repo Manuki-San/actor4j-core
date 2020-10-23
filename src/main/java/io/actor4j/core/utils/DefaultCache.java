@@ -18,6 +18,11 @@ package io.actor4j.core.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * DefaultCache is a default implementation of {@link Cache}
+ * @param <K>
+ * @param <E> 
+ */
 public class DefaultCache<K, E> implements Cache<K, E> {
 
     protected Map<K, E> map;
@@ -40,10 +45,12 @@ public class DefaultCache<K, E> implements Cache<K, E> {
         return map.put(key, value);
     }
 
+    @Override
     public void remove(K key) {
         map.remove(key);
     }
 
+    @Override
     public void clear() {
         map.clear();
     }

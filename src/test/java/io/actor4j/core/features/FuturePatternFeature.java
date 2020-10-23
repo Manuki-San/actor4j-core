@@ -31,61 +31,63 @@ import io.actor4j.core.utils.FuturePattern;
 import static org.junit.Assert.*;
 
 public class FuturePatternFeature {
-	@Test(timeout=5000)
-	public void test() {
-		CountDownLatch testDone = new CountDownLatch(2);
-		
-		ActorSystem system = new ActorSystem();
-		
-		UUID parent = system.addActor(() -> new Actor("parent") {
-			protected Future<String> future;
-			protected UUID child;
-			
-			@Override
-			public void preStart() {
-				child = addChild(() -> new Actor("child") {
-					@Override
-					public void receive(ActorMessage<?> message) {
-						if (message.tag==11)
-							tell("success_two", 11, message.source);
-					}
-				});
-			}
-			
-			@Override
-			public void receive(ActorMessage<?> message) {
-				if (message.tag==10) {
-					tell("success", 0, message.source);
-					future = FuturePattern.ask(null, 11, child, this);
-					become((msg) -> {
-						// don't block the actor itself
-						if (future.isDone())
+
+    @Test(timeout = 5000)
+    public void test() {
+        CountDownLatch testDone = new CountDownLatch(2);
+
+        ActorSystem system = new ActorSystem();
+
+        UUID parent = system.addActor(() -> new Actor("parent") {
+            protected Future<String> future;
+            protected UUID child;
+
+            @Override
+            public void preStart() {
+                child = addChild(() -> new Actor("child") {
+                    @Override
+                    public void receive(ActorMessage<?> message) {
+                        if (message.tag == 11) {
+                            tell("success_two", 11, message.source);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void receive(ActorMessage<?> message) {
+                if (message.tag == 10) {
+                    tell("success", 0, message.source);
+                    future = FuturePattern.ask(null, 11, child, this);
+                    become((msg) -> {
+                        // don't block the actor itself
+                        if (future.isDone())
 							try {
-								assertEquals("success_two", future.get());
-								unbecome();
-								testDone.countDown();
-							} catch (InterruptedException | ExecutionException e) {
-								e.printStackTrace();
-							}
-					});
-					getSystem().timer().schedule(new ActorMessage<>("test", 0, self(), null), self(), 0, 100, TimeUnit.MILLISECONDS);
-					testDone.countDown();
-				}
-			}
-		});
-		
-		system.start();
-		try {
-			assertEquals("success", FuturePattern.ask(null, 10, parent, system).get());
-		} catch (InterruptedException | ExecutionException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			testDone.await();
-		} catch (InterruptedException e2) {
-			e2.printStackTrace();
-		}
-		
-		system.shutdownWithActors(true);
-	}
+                            assertEquals("success_two", future.get());
+                            unbecome();
+                            testDone.countDown();
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    getSystem().timer().schedule(new ActorMessage<>("test", 0, self(), null), self(), 0, 100, TimeUnit.MILLISECONDS);
+                    testDone.countDown();
+                }
+            }
+        });
+
+        system.start();
+        try {
+            assertEquals("success", FuturePattern.ask(null, 10, parent, system).get());
+        } catch (InterruptedException | ExecutionException e1) {
+            e1.printStackTrace();
+        }
+        try {
+            testDone.await();
+        } catch (InterruptedException e2) {
+            e2.printStackTrace();
+        }
+
+        system.shutdownWithActors(true);
+    }
 }

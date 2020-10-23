@@ -99,13 +99,11 @@ public class ActorSystem {
 
     public ActorSystem serverMode() {
         system.serverMode();
-
         return this;
     }
 
     public ActorSystem setClientRunnable(ActorClientRunnable clientRunnable) {
         system.setClientRunnable(clientRunnable);
-
         return this;
     }
 
@@ -115,7 +113,6 @@ public class ActorSystem {
 
     public ActorSystem setParallelismMin(int parallelismMin) {
         system.setParallelismMin(parallelismMin);
-
         return this;
     }
 
@@ -125,37 +122,31 @@ public class ActorSystem {
 
     public ActorSystem setParallelismFactor(int parallelismFactor) {
         system.setParallelismFactor(parallelismFactor);
-
         return this;
     }
 
     public ActorSystem parkMode() {
         system.parkMode();
-
         return this;
     }
 
     public ActorSystem sleepMode() {
         system.sleepMode();
-
         return this;
     }
 
     public ActorSystem sleepMode(long sleepTime) {
         system.sleepMode(sleepTime);
-
         return this;
     }
 
     public ActorSystem yieldMode() {
         system.yieldMode();
-
         return this;
     }
 
     public ActorSystem persistenceMode(PersistenceConnector persistenceConnector) {
         system.persistenceMode(persistenceConnector);
-
         return this;
     }
 
@@ -165,19 +156,16 @@ public class ActorSystem {
 
     public ActorSystem setPodDatabase(Database<?> podDatabase) {
         system.setPodDatabase(podDatabase);
-
         return this;
     }
 
     public ActorSystem setDebugUnhandled(boolean debugUnhandled) {
         system.setDebugUnhandled(debugUnhandled);
-
         return this;
     }
 
     public ActorSystem addServiceNode(ActorServiceNode serviceNode) {
         system.addServiceNode(serviceNode);
-
         return this;
     }
 
@@ -211,13 +199,11 @@ public class ActorSystem {
 
     public ActorSystem setAlias(UUID id, String alias) {
         system.setAlias(id, alias);
-
         return this;
     }
 
     public ActorSystem setAlias(List<UUID> ids, String alias) {
         system.setAlias(ids, alias);
-
         return this;
     }
 
@@ -246,7 +232,6 @@ public class ActorSystem {
      */
     public ActorSystem send(ActorMessage<?> message) {
         system.send(message);
-
         return this;
     }
 
@@ -258,25 +243,21 @@ public class ActorSystem {
      */
     public ActorSystem sendViaPath(ActorMessage<?> message, String path) {
         system.sendViaPath(message, path);
-
         return this;
     }
 
     public ActorSystem sendViaAlias(ActorMessage<?> message, String alias) {
         system.sendViaAlias(message, alias);
-
         return this;
     }
 
     public ActorSystem sendWhenActive(ActorMessage<?> message) {
         system.sendWhenActive(message);
-
         return this;
     }
 
     public ActorSystem broadcast(ActorMessage<?> message, ActorGroup group) {
         system.broadcast(message, group);
-
         return this;
     }
 
@@ -286,19 +267,16 @@ public class ActorSystem {
 
     public ActorSystem addRedirection(UUID source, UUID dest) {
         system.addRedirection(source, dest);
-
         return this;
     }
 
     public ActorSystem removeRedirection(UUID source) {
         system.removeRedirection(source);
-
         return this;
     }
 
     public ActorSystem clearRedirections() {
         system.clearRedirections();
-
         return this;
     }
 

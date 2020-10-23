@@ -23,7 +23,7 @@ import io.actor4j.core.actors.ActorGroupMember;
 import io.actor4j.core.pods.PodContext;
 
 /**
- * A PodActor is an {@link Actor} 
+ * A PodActor is an {@link Actor}
  */
 public abstract class PodActor extends Actor implements ActorGroupMember {
 

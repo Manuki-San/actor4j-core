@@ -22,9 +22,9 @@ import java.util.Map;
 
 /**
  * Least recently used (LRU) {@link Cache}
- * 
+ *
  * @param <K>
- * @param <V> 
+ * @param <V>
  */
 public class CacheLRU<K, V> implements Cache<K, V> {
 

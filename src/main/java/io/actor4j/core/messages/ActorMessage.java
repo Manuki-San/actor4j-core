@@ -27,7 +27,7 @@ import io.actor4j.core.utils.Copyable;
 import io.actor4j.core.utils.Shareable;
 
 /**
- * Message that can be exchanged between {@link Actor}
+ * Message that can be exchanged between {@link io.actor4j.core.actors.Actor}
  *
  * @param <T>
  */
@@ -68,10 +68,10 @@ public class ActorMessage<T> implements Copyable<ActorMessage<T>>, Comparable<Ac
     /**
      * Create an ActorMessage
      *
-     * @param value payload of the message
+     * @param value message payload
      * @param tag tag helping differentiation between messages
-     * @param source sender of the message
-     * @param dest destination of the message
+     * @param source message sender
+     * @param dest message destination
      * @param interaction interaction ID
      * @param protocol interaction protocol
      * @param ontology Ontology

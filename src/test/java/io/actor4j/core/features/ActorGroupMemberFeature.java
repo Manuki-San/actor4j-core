@@ -38,184 +38,201 @@ import static io.actor4j.core.utils.ActorLogger.logger;
 import static org.junit.Assert.*;
 
 public class ActorGroupMemberFeature {
-	protected ActorSystem system;
-	
-	@Before
-	public void before() {
-		system = new ActorSystem();
-	}
-	
-	@Test(timeout=30000)
-	public void test_ActorGroupMember() {
-		system.setParallelismMin(3); /* temporary solution */
-		
-		int instances = system.getParallelismMin()+1;
-		CountDownLatch testDone = new CountDownLatch(instances*2);
-		AtomicReference<String> threadName1 = new AtomicReference<>("");
-		AtomicReference<String> threadName2 = new AtomicReference<>("");
-		
-		ActorGroup group1 = new ActorGroupSet();
-		system.setAlias(system.addActor(() -> new ActorWithGroup(group1) {
-			protected boolean first = true;
-			@Override
-			public void receive(ActorMessage<?> message) {
-				logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
-				if (first) {
-					if (!threadName1.compareAndSet("", Thread.currentThread().getName()))
-						assertEquals(threadName1.get(), Thread.currentThread().getName());
-					testDone.countDown();
-					first=false;
-				}
-			}
-		}, instances), "instances");
-		ActorGroup group2 = new ActorGroupSet();
-		system.setAlias(system.addActor(() -> new ActorWithGroup(group2) {
-			protected boolean first = true;
-			@Override
-			public void receive(ActorMessage<?> message) {
-				logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
-				if (first) {
-					if (!threadName2.compareAndSet("", Thread.currentThread().getName()))
-						assertEquals(threadName2.get(), Thread.currentThread().getName());
-					testDone.countDown();
-					first=false;
-				}
-			}
-		}, instances), "instances");
-		
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances");
-			}
-		}, 0, 50);
-		
-		system.start();
-		
-		try {
-			testDone.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		timer.cancel();
-		system.shutdownWithActors(true);
-	}
-	
-	@Test(timeout=30000)
-	public void test_ActorDistributedGroupMember() {
-		system.setParallelismMin(3); /* temporary solution */
-		
-		int instances = system.getParallelismMin();
-		CountDownLatch testDone = new CountDownLatch(instances);
-		Map<String, Boolean> map = new ConcurrentHashMap<String, Boolean>();
-		
-		ActorGroup group1 = new ActorGroupSet();
-		system.setAlias(system.addActor(() -> new ActorWithDistributedGroup(group1) {
-			protected boolean first = true;
-			@Override
-			public void receive(ActorMessage<?> message) {
-				logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
-				if (first) {
-					if (map.get(Thread.currentThread().getName())==null)
-						map.put(Thread.currentThread().getName(), true);
-					testDone.countDown();
-					first=false;
-				}
-			}
-		}, instances), "instances");
-		
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances");
-			}
-		}, 0, 50);
-		
-		system.start();
-				
-		try {
-			testDone.await();
-			assertEquals(instances, map.size());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		timer.cancel();
-		system.shutdownWithActors(true);
-	}
-	
-	@Test(timeout=30000)
-	public void test_ActorWithBothGroups_with_ActorWithGroup() {
-		system.setParallelismMin(3); /* temporary solution */
-		
-		int instances = system.getParallelismMin();
-		CountDownLatch testDone = new CountDownLatch(instances+instances*instances);
-		Map<String, Boolean> map = new ConcurrentHashMap<String, Boolean>();
-		Map<UUID, String> threadMap = new ConcurrentHashMap<UUID, String>();
-		
-		ActorGroup distributedGroup = new ActorGroupSet();
-		system.setAlias(system.addActor(() -> new ActorWithBothGroups(distributedGroup) {
-			protected ActorGroup group = new ActorGroupSet();
-			protected boolean first = true;
-			@Override
-			public void preStart() {
-				system.setAlias(system.addActor(() -> new ActorWithGroup(group) {
-					protected boolean first_child = true;
-					@Override
-					public void receive(ActorMessage<?> message) {
-						logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
-						if (first_child) {
-							if (!threadMap.containsKey(groupId))
-								threadMap.put(groupId, Thread.currentThread().getName());
-							else
-								assertEquals(threadMap.get(groupId), Thread.currentThread().getName());
-							testDone.countDown();
-							first_child=false;
-						}
-					}
-				}, instances), "instances_child");
-			}
-			@Override
-			public void receive(ActorMessage<?> message) {
-				logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
-				if (first) {
-					if (map.get(Thread.currentThread().getName())==null)
-						map.put(Thread.currentThread().getName(), true);
-					testDone.countDown();
-					first=false;
-					
-					if (!threadMap.containsKey(getGroupId()))
-						threadMap.put(getGroupId(), Thread.currentThread().getName());
-					else
-						assertEquals(threadMap.get(getGroupId()), Thread.currentThread().getName());
-				}
-			}
-			@Override
-			public UUID getGroupId() {
-				return group.getId();
-			}
-		}, instances), "instances");
 
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances");
-				system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances_child");
-			}
-		}, 0, 50);
-		
-		system.start();
+    protected ActorSystem system;
 
-		try {
-			testDone.await();
-			assertEquals(instances, map.size());
-			assertEquals(instances, threadMap.size());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		timer.cancel();
-		system.shutdownWithActors(true);
-	}
+    @Before
+    public void before() {
+        system = new ActorSystem();
+    }
+
+    @Test(timeout = 30000)
+    public void test_ActorGroupMember() {
+        system.setParallelismMin(3);
+        /* temporary solution */
+
+        int instances = system.getParallelismMin() + 1;
+        CountDownLatch testDone = new CountDownLatch(instances * 2);
+        AtomicReference<String> threadName1 = new AtomicReference<>("");
+        AtomicReference<String> threadName2 = new AtomicReference<>("");
+
+        ActorGroup group1 = new ActorGroupSet();
+        system.setAlias(system.addActor(() -> new ActorWithGroup(group1) {
+            protected boolean first = true;
+
+            @Override
+            public void receive(ActorMessage<?> message) {
+                logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
+                if (first) {
+                    if (!threadName1.compareAndSet("", Thread.currentThread().getName())) {
+                        assertEquals(threadName1.get(), Thread.currentThread().getName());
+                    }
+                    testDone.countDown();
+                    first = false;
+                }
+            }
+        }, instances), "instances");
+        ActorGroup group2 = new ActorGroupSet();
+        system.setAlias(system.addActor(() -> new ActorWithGroup(group2) {
+            protected boolean first = true;
+
+            @Override
+            public void receive(ActorMessage<?> message) {
+                logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
+                if (first) {
+                    if (!threadName2.compareAndSet("", Thread.currentThread().getName())) {
+                        assertEquals(threadName2.get(), Thread.currentThread().getName());
+                    }
+                    testDone.countDown();
+                    first = false;
+                }
+            }
+        }, instances), "instances");
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances");
+            }
+        }, 0, 50);
+
+        system.start();
+
+        try {
+            testDone.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        timer.cancel();
+        system.shutdownWithActors(true);
+    }
+
+    @Test(timeout = 30000)
+    public void test_ActorDistributedGroupMember() {
+        system.setParallelismMin(3);
+        /* temporary solution */
+
+        int instances = system.getParallelismMin();
+        CountDownLatch testDone = new CountDownLatch(instances);
+        Map<String, Boolean> map = new ConcurrentHashMap<String, Boolean>();
+
+        ActorGroup group1 = new ActorGroupSet();
+        system.setAlias(system.addActor(() -> new ActorWithDistributedGroup(group1) {
+            protected boolean first = true;
+
+            @Override
+            public void receive(ActorMessage<?> message) {
+                logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
+                if (first) {
+                    if (map.get(Thread.currentThread().getName()) == null) {
+                        map.put(Thread.currentThread().getName(), true);
+                    }
+                    testDone.countDown();
+                    first = false;
+                }
+            }
+        }, instances), "instances");
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances");
+            }
+        }, 0, 50);
+
+        system.start();
+
+        try {
+            testDone.await();
+            assertEquals(instances, map.size());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        timer.cancel();
+        system.shutdownWithActors(true);
+    }
+
+    @Test(timeout = 30000)
+    public void test_ActorWithBothGroups_with_ActorWithGroup() {
+        system.setParallelismMin(3);
+        /* temporary solution */
+
+        int instances = system.getParallelismMin();
+        CountDownLatch testDone = new CountDownLatch(instances + instances * instances);
+        Map<String, Boolean> map = new ConcurrentHashMap<String, Boolean>();
+        Map<UUID, String> threadMap = new ConcurrentHashMap<UUID, String>();
+
+        ActorGroup distributedGroup = new ActorGroupSet();
+        system.setAlias(system.addActor(() -> new ActorWithBothGroups(distributedGroup) {
+            protected ActorGroup group = new ActorGroupSet();
+            protected boolean first = true;
+
+            @Override
+            public void preStart() {
+                system.setAlias(system.addActor(() -> new ActorWithGroup(group) {
+                    protected boolean first_child = true;
+
+                    @Override
+                    public void receive(ActorMessage<?> message) {
+                        logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
+                        if (first_child) {
+                            if (!threadMap.containsKey(groupId)) {
+                                threadMap.put(groupId, Thread.currentThread().getName());
+                            } else {
+                                assertEquals(threadMap.get(groupId), Thread.currentThread().getName());
+                            }
+                            testDone.countDown();
+                            first_child = false;
+                        }
+                    }
+                }, instances), "instances_child");
+            }
+
+            @Override
+            public void receive(ActorMessage<?> message) {
+                logger().debug(String.format("from thread %s of actor %s", Thread.currentThread().getName(), self()));
+                if (first) {
+                    if (map.get(Thread.currentThread().getName()) == null) {
+                        map.put(Thread.currentThread().getName(), true);
+                    }
+                    testDone.countDown();
+                    first = false;
+
+                    if (!threadMap.containsKey(getGroupId())) {
+                        threadMap.put(getGroupId(), Thread.currentThread().getName());
+                    } else {
+                        assertEquals(threadMap.get(getGroupId()), Thread.currentThread().getName());
+                    }
+                }
+            }
+
+            @Override
+            public UUID getGroupId() {
+                return group.getId();
+            }
+        }, instances), "instances");
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances");
+                system.sendViaAlias(new ActorMessage<Object>(null, 0, system.SYSTEM_ID, null), "instances_child");
+            }
+        }, 0, 50);
+
+        system.start();
+
+        try {
+            testDone.await();
+            assertEquals(instances, map.size());
+            assertEquals(instances, threadMap.size());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        timer.cancel();
+        system.shutdownWithActors(true);
+    }
 }

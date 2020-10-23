@@ -43,9 +43,9 @@ public class ActorMessageMatcher {
      * Creates an ActorMessageMatcher
      */
     public ActorMessageMatcher() {
-        matches     = new LinkedList<>();
+        matches = new LinkedList<>();
         matchesElse = new LinkedList<>();
-        matchesAny  = new LinkedList<>();
+        matchesAny = new LinkedList<>();
     }
 
     /**
@@ -182,13 +182,14 @@ public class ActorMessageMatcher {
     }
 
     /**
-     * Creates an ActorMessageMatcher matching one source from a list and one tag
+     * Creates an ActorMessageMatcher matching one source from a list and one
+     * tag
      *
      * @param sources a list of sources
      * @param tag the tag to match
      * @param action the action to perform
      * @return the message matcher
-     */    
+     */
     public ActorMessageMatcher match(final UUID[] sources, final int tag, Consumer<ActorMessage<?>> action) {
         checkAction(action);
 
@@ -215,13 +216,14 @@ public class ActorMessageMatcher {
     }
 
     /**
-     * Creates an ActorMessageMatcher matching one source and one tag from a list
+     * Creates an ActorMessageMatcher matching one source and one tag from a
+     * list
      *
      * @param source the source
      * @param tags a list of tags
      * @param action the action to perform
      * @return the message matcher
-     */    
+     */
     public ActorMessageMatcher match(final UUID source, final int[] tags, Consumer<ActorMessage<?>> action) {
         checkAction(action);
 
@@ -248,8 +250,9 @@ public class ActorMessageMatcher {
     }
 
     /**
-     * Creates an ActorMessageMatcher matching one source from a list and one tag from a list
-     * 
+     * Creates an ActorMessageMatcher matching one source from a list and one
+     * tag from a list
+     *
      * @param sources the list of sources
      * @param tags the list of tags
      * @param action the action to perform
@@ -291,7 +294,7 @@ public class ActorMessageMatcher {
 
     /**
      * Creates an ActorMessageMatcher matching the class of the payload
-     * 
+     *
      * @param clazz the class of the message payload
      * @param action the action to perform
      * @return the message matcher
@@ -301,10 +304,12 @@ public class ActorMessageMatcher {
     }
 
     /**
-     * Creates an ActorMessageMatcher matching the class of the payload and a {@link Predicate}
-     * 
+     * Creates an ActorMessageMatcher matching the class of the payload and a
+     * {@link Predicate}
+     *
      * @param clazz the class of the payload
-     * @param predicate the predicate to apply (in addition to the matching class)
+     * @param predicate the predicate to apply (in addition to the matching
+     * class)
      * @param action the action to perform
      * @return the message mapper
      */
@@ -334,7 +339,7 @@ public class ActorMessageMatcher {
 
     /**
      * Creates an ActorMessageMatcher matching a {@link Predicate}
-     * 
+     *
      * @param predicate the predicate to use
      * @param action the action to perform
      * @return the message matcher
@@ -397,7 +402,8 @@ public class ActorMessageMatcher {
 
     /**
      * Check if the predicate is null
-     * @param predicate 
+     *
+     * @param predicate
      */
     protected void checkPredicate(Predicate<ActorMessage<?>> predicate) {
         if (predicate == null) {
@@ -407,7 +413,8 @@ public class ActorMessageMatcher {
 
     /**
      * Check if the action is null
-     * @param action 
+     *
+     * @param action
      */
     protected void checkAction(Consumer<ActorMessage<?>> action) {
         if (action == null) {
